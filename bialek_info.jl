@@ -24,10 +24,10 @@ dt=0.1*ms::Float64
 
 #for t in 1:50
 
-word_length=30
-letter_length=2*ms
+word_length=60
+letter_length=1*ms
 
-for tl in 1:200
+for tl in 1:500
 
     train_length=50*sec*tl
 
