@@ -19,7 +19,7 @@ sigma=8*mv::Float64
 lasts=30*ms::Float64
 
 #mu=1.0 corresponds to independent
-mu=0.0
+mu=0.2
 
 dt=0.1*ms::Float64
 
@@ -27,14 +27,18 @@ tau=12*ms
 
 #for t in 1:50
 
-window_length=100*ms::Float64
-h0=100
+window_length=50*ms::Float64
+#h0=100
 
-while mu<=1
+#while mu<=1
 
-    train_length=200*sec::Float64
+h=20
 
-    h=h0*convert(Int64,floor(train_length/(100*sec)))
+while h<=200
+
+    train_length=100*sec::Float64
+
+    #h=h0*convert(Int64,floor(train_length/(100*sec)))
 
     sigma_prime=sigma/sqrt(mu^2+(1-mu)^2)
 
@@ -46,9 +50,17 @@ while mu<=1
     distances1=new_matrix(fragments1,tau)
     distances2=new_matrix(fragments2,tau)
 
-    println(mu," ",information_from_matrix(distances1,distances2,h,h)/window_length)
+    info=information_from_matrix(distances1,distances2,h,h)/window_length
 
-    mu+=0.025
+    fragments2=shuffle!(fragments2)
+    distances2=new_matrix(fragments2,tau)
 
+    info_noise=information_from_matrix(distances1,distances2,h,h)/window_length
+
+    println(h," ",info-info_noise," ",info," ",info_noise)
+
+#    mu+=0.025
+    
+    h+=10
    
 end
