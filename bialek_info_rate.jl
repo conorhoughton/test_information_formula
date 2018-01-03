@@ -20,7 +20,7 @@ lasts=30*ms::Float64
 #mu=1.0 corresponds to independent
 mu=0.0
 
-dt=1*ms::Float64
+dt=0.1*ms::Float64
 
 #for t in 1:50
 
@@ -28,7 +28,7 @@ dt=1*ms::Float64
 
 while mu< 1
 
-    train_length=200*sec
+    train_length=100*sec
 
     sigma_prime=sigma/sqrt(mu^2+(1-mu)^2)
 
