@@ -39,7 +39,7 @@ struct Trad_Spike_Train
     train::Array{Float64}
     square_term::Float64
     
-    function Trad_Spike_Train(train)
+    function Trad_Spike_Train(train,tau)
         new(train,trad_square_term(train,tau))
     end
 end
@@ -49,7 +49,7 @@ function traditional_matrix(trains::Array{Array{Float64,1},1},tau::Float64)
     n=length(trains)
 
     
-    spike_trains=[Trad_Spike_Train(train) for train in trains]
+    spike_trains=[Trad_Spike_Train(train,tau) for train in trains]
 
     matrix=zeros(n,n)
 
@@ -134,7 +134,56 @@ function new_metric(u_train::Array{Float64},v_train::Array{Float64},tau::Float64
 end
 
 
+function new_distance(u_train::Spike_Train,v_train::Spike_Train,tau::Float64)
+    if u_train.length*v_train.length==0
+        return u_train.length+v_trfoain.length
+    end
 
+    u_train.square_term+v_train.square_term-cross_term_uv(u_train,v_train,tau)-cross_term_uv(v_train,u_train,tau)
+end
+
+
+function new_matrix(trains::Array{Array{Float64,1},1},tau::Float64)
+
+    n=length(trains)
+
+    
+    spike_trains=[Spike_Train(train,tau) for train in trains]
+
+    matrix=zeros(n,n)
+
+    for i in 1:n
+        for j in i+1:n
+            distance=spike_trains[i].square_term+spike_trains[j].square_term-cross_term_uv(spike_trains[i],spike_trains[j],tau)-cross_term_uv(spike_trains[j],spike_trains[i],tau)
+            matrix[i,j]=distance
+            matrix[j,i]=distance
+        end
+    end
+
+    matrix
+
+end
+
+
+
+function rate_distance_matrix(rates::Array{Float64})
+
+    n=length(rates)
+
+    
+    matrix=zeros(n,n)
+
+    for i in 1:n
+        for j in i+1:n
+            distance=abs(rates[i]-rates[j])
+            matrix[i,j]=distance
+            matrix[j,i]=distance
+        end
+    end
+
+    matrix
+
+end
 
 
         

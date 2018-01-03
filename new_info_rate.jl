@@ -1,7 +1,7 @@
 include("./get_spike_trains.jl")
 include("./trains_to_rate.jl")
-include("./information_from_dict.jl")
-include("./get_spike_trains.jl")
+include("./information_from_matrix.jl")
+include("./spike_train_metrics.jl")
 include("./metric.jl")
 
 v_t=-55*mv::Float64
@@ -36,9 +36,14 @@ while mu< 1
 
     window_length=100*ms::Float64
 
-    frequency_table=trains_to_rate(spike_trains[1],spike_trains[2],window_length)
+    (rates1,rates2)=trains_get_rate(spike_trains[1],spike_trains[2],window_length)
 
-    println(mu," ",information_from_dict(frequency_table.table)/window_length)
+    distances1=rate_distance_matrix(rates1)
+    distances2=rate_distance_matrix(rates2)
+
+    h=convert(Int64,floor(length(rates1)/2))
+
+    println(mu," ",information_from_matrix(distances1,distances2,h,h)/window_length)
 
     mu+=0.1
 
