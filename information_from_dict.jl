@@ -16,15 +16,6 @@ function information_from_dict(table::Dict{Array{Int64},Int64})
     marginal1=make_marginal(1)
     marginal2=make_marginal(2)
 
-    print(" ",length(keys(marginal1))," ")
-
-    total=0
-    for key in keys(marginal1)
-        total+=marginal1[key]
-    end
-
-    print(total," ")
-
     total=0
 
     for key in keys(table)

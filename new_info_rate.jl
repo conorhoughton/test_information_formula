@@ -18,7 +18,7 @@ sigma=8*mv::Float64
 lasts=30*ms::Float64
 
 #mu=1.0 corresponds to independent
-mu=0.2
+mu=0.0
 
 dt=0.1*ms::Float64
 
@@ -26,11 +26,11 @@ dt=0.1*ms::Float64
 
 #h=105
 
-h=10
+h=90
 
-#while mu<=1
+while mu<=1
 
-while h<200
+#while h<200
 
     train_length=100*sec
 
@@ -55,8 +55,10 @@ while h<200
 
     info_noise=information_from_matrix(distances1,distances2,h,h)/window_length
 
-    println(h," ",info-info_noise," ",info," ",info_noise)
+    println(mu," ",info-info_noise," ",info," ",info_noise)
 
-    h+=10
+    mu+=0.05
+
+#    h+=10
 
 end
