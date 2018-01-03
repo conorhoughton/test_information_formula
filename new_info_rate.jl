@@ -28,7 +28,7 @@ dt=1*ms::Float64
 
 while mu< 1
 
-    train_length=200*sec
+    train_length=100*sec
 
     sigma_prime=sigma/sqrt(mu^2+(1-mu)^2)
 
@@ -41,7 +41,8 @@ while mu< 1
     distances1=rate_distance_matrix(rates1)
     distances2=rate_distance_matrix(rates2)
 
-    h=convert(Int64,floor(length(rates1)/2))
+#    h=convert(Int64,floor(length(rates1)/2))
+    h=200
 
     println(mu," ",information_from_matrix(distances1,distances2,h,h)/window_length)
 
