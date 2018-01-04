@@ -37,8 +37,13 @@ while mu< 1
     window_length=100*ms::Float64
 
     frequency_table=trains_to_rate(spike_trains[1],spike_trains[2],window_length)
+    info=information_from_dict(frequency_table.table)
 
-    println(mu," ",information_from_dict(frequency_table.table)/window_length)
+    frequency_table_noise=trains_to_rate(spike_trains[1],shuffle_train_for_rate(spike_trains[2],window_length),window_length)
+    info_noise=information_from_dict(frequency_table_noise.table)
+
+
+    println(mu," ",(info-info_noise)/window_length," ",info/window_length," ",info_noise/window_length)
 
     mu+=0.05
 

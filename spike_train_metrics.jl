@@ -150,6 +150,8 @@ function new_matrix(trains::Array{Array{Float64,1},1},tau::Float64)
 
     matrix=zeros(n,n)
 
+    println(typeof(matrix))
+
     for i in 1:n
         for j in i+1:n
             distance=new_distance(spike_trains[i],spike_trains[j],tau)

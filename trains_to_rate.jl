@@ -1,3 +1,4 @@
+include("./chop_train.jl")
 
 struct Frequency_Table
 
@@ -41,6 +42,40 @@ function trains_to_rate(spike_train1::Array{Float64},spike_train2::Array{Float64
 
 end
 
+function shuffle_table(freq_table::Frequency_Table)
+
+    table=freq_table.table
+
+    second_key=shuffle([key[2] for key in keys(table)])
+
+    new_table=Frequency_Table()
+
+    for (i,key) in enumerate(keys(table))
+        new_table.table[ [key[1],second_key[i]] ]=table[key]
+    end
+
+    new_table
+
+end
+        
+
+function shuffle_train_for_rate(spike_train::Array{Float64},window_length::Float64)
+    
+    fragments=shuffle!(chop_train(spike_train,window_length,spike_train[end]))
+
+    t=0
+
+    new_train=Float64[]
+
+    for (i,fragment) in enumerate(fragments)
+        for time in fragment
+            push!(new_train,time+(i-1)*window_length)
+        end
+    end
+
+    new_train
+
+end
 
 function trains_get_rate(spike_train1::Array{Float64},spike_train2::Array{Float64},window_length::Float64)
 

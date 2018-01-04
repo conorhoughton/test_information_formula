@@ -28,6 +28,8 @@ dt=0.1*ms::Float64
 
 h=90
 
+shuffle_trials=5
+
 while mu<=1
 
 #while h<200
@@ -45,8 +47,11 @@ while mu<=1
     distances1=rate_distance_matrix(rates1)
     distances2=rate_distance_matrix(rates2)
 
-    rates2_shuffled=shuffle!(rates2)
-    distances2_shuffled=rate_distance_matrix(rates2)
+    distances2_shuffled=Array{Array{Float64,2},1}()
+
+    for _ in 1:shuffle_trials
+        push!(distances2_shuffled,rate_distance_matrix(shuffle!(rates2)))
+    end
 
 #    h=convert(Int64,floor(length(rates1)/2))
 #    h=200
@@ -57,9 +62,12 @@ while mu<=1
 
     for h_new in h-20:2:h+20
         info=information_from_matrix(distances1,distances2,h,h)/window_length
-        info_noise=information_from_matrix(distances1,distances2_shuffled,h,h)/window_length
-        if info-info_noise>info_best
-            info_best=info-info_noise
+        info_noise=0.0::Float64
+        for distance_shuffled in distances2_shuffled
+            info_noise+=information_from_matrix(distances1,distance_shuffled,h,h)/window_length
+        end
+        if info-info_noise/shuffle_trials>info_best
+            info_best=info-info_noise/shuffle_trials
             h_best=h_new
         end
    

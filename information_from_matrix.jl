@@ -9,20 +9,18 @@ function information_from_matrix(u_distances::Array{Float64,2},v_distances::Arra
 
     information=0
 
+    function points(u::Int64,i::Int64)
+        excised=vcat(distances[u][i,1:i-1],distances[u][i,i+1:end])
+        [convert(Int64,x[1]) for x in sort!(shuffle([[i,d] for (i,d) in enumerate(excised)]),by = x -> x[2])[1:u_h]]
+    end
+
+    distances=(u_distances,v_distances)
+
     for i in 1:n
-
-
-        u_points=[convert(Int64,x[1]) for x in sort!(shuffle([[i,d] for (i,d) in enumerate(u_distances[i,:])]),by = x -> x[2])[1:u_h]]
-        v_points=[convert(Int64,x[1]) for x in sort!(shuffle([[i,d] for (i,d) in enumerate(v_distances[i,:])]),by = x -> x[2])[1:v_h]]
-
-
-        v=intersect(u_points,v_points)
+       
+        v=intersect(points(1,i),points(2,i))
         
-        hash_v=length(v)
-
-        if !(i in v)
-            hash_v+=1
-        end
+        hash_v=1+length(v)
 
         information+=log(n*hash_v/(u_h*v_h))
 
@@ -34,4 +32,5 @@ end
         
 
         
-        
+
+
