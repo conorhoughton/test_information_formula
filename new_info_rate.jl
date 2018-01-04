@@ -45,17 +45,29 @@ while mu<=1
     distances1=rate_distance_matrix(rates1)
     distances2=rate_distance_matrix(rates2)
 
+    rates2_shuffled=shuffle!(rates2)
+    distances2_shuffled=rate_distance_matrix(rates2)
+
 #    h=convert(Int64,floor(length(rates1)/2))
 #    h=200
 
-    info=information_from_matrix(distances1,distances2,h,h)/window_length
 
-    rates2=shuffle!(rates2)
-    distances2=rate_distance_matrix(rates2)
+    h_best=h
+    info_best=0
 
-    info_noise=information_from_matrix(distances1,distances2,h,h)/window_length
+    for h_new in h-20:2:h+20
+        info=information_from_matrix(distances1,distances2,h,h)/window_length
+        info_noise=information_from_matrix(distances1,distances2_shuffled,h,h)/window_length
+        if info-info_noise>info_best
+            info_best=info-info_noise
+            h_best=h_new
+        end
+   
+    end
 
-    println(mu," ",info-info_noise," ",info," ",info_noise)
+    h=h_best
+
+    println(mu," ",h," ",info_best)
 
     mu+=0.05
 

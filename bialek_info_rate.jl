@@ -28,7 +28,7 @@ dt=0.1*ms::Float64
 
 while mu< 1
 
-    train_length=100*sec
+    train_length=500*sec
 
     sigma_prime=sigma/sqrt(mu^2+(1-mu)^2)
 
@@ -40,6 +40,6 @@ while mu< 1
 
     println(mu," ",information_from_dict(frequency_table.table)/window_length)
 
-    mu+=0.1
+    mu+=0.05
 
 end
