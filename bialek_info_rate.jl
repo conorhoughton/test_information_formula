@@ -28,7 +28,7 @@ dt=0.1*ms::Float64
 
 while mu< 1
 
-    train_length=500*sec
+    train_length=1000*sec
 
     sigma_prime=sigma/sqrt(mu^2+(1-mu)^2)
 

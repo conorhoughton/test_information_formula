@@ -16,17 +16,23 @@ function information_from_matrix(u_distances::Array{Float64,2},v_distances::Arra
 
     distances=(u_distances,v_distances)
 
-    for i in 1:n
-       
-        v=intersect(points(1,i),points(2,i))
-        
-        hash_v=1+length(v)
 
-        information+=log(n*hash_v/(u_h*v_h))
+    shuffle_trials=1
+
+    for _ in 1:shuffle_trials
+        for i in 1:n
+       
+            v=intersect(points(1,i),points(2,i))
+        
+            hash_v=1+length(v)
+            
+            information+=log(n*hash_v/(u_h*v_h))
+            
+        end
 
     end
 
-    information/n
+    information/(n*shuffle_trials)
 
 end
         

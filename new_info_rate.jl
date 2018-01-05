@@ -27,8 +27,9 @@ dt=0.1*ms::Float64
 #h=105
 
 h=90
+h_stride=40
 
-shuffle_trials=10
+shuffle_trials=1
 
 while mu<=1
 
@@ -60,7 +61,7 @@ while mu<=1
     h_best=h
     info_best=0
 
-    for h_new in h-20:1:h+20
+    for h_new in h-h_stride:2:h+h_stride
         info=information_from_matrix(distances1,distances2,h,h)/window_length
         info_noise=0.0::Float64
         for distance_shuffled in distances2_shuffled
