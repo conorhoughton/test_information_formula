@@ -42,6 +42,43 @@ function trains_to_rate(spike_train1::Array{Float64},spike_train2::Array{Float64
 
 end
 
+
+
+function trains_to_rate(spike_train1::Array{Float64},spike_train2::Array{Float64},window_length::Float64,end_time::Float64)
+
+    table=Frequency_Table()
+
+    fragments1=chop_train(spike_train1,window_length,end_time)
+    fragments2=chop_train(spike_train2,window_length,end_time)
+
+    for i in 1:length(fragments1)
+        total_array=[length(fragments1[i]),length(fragments2[i])]
+        table.table[total_array]=get(table.table,total_array,0)+1
+    end
+
+    table
+
+end
+
+
+function trains_to_rate_shuffled(spike_train1::Array{Float64},spike_train2::Array{Float64},window_length::Float64,end_time::Float64)
+
+    table=Frequency_Table()
+
+    fragments1=chop_train(spike_train1,window_length,end_time)
+    fragments2=shuffle!(chop_train(spike_train2,window_length,end_time))
+
+    for i in 1:length(fragments1)
+        total_array=[length(fragments1[i]),length(fragments2[i])]
+        table.table[total_array]=get(table.table,total_array,0)+1
+    end
+
+    table
+
+end
+
+
+
 function shuffle_table(freq_table::Frequency_Table)
 
     table=freq_table.table
