@@ -16,27 +16,63 @@ function information_from_matrix(u_distances::Array{Float64,2},v_distances::Arra
 
     distances=(u_distances,v_distances)
 
+    shuffle_n=1
 
-    shuffle_trials=1
-
-    for _ in 1:shuffle_trials
+    for _ in 1:shuffle_n
         for i in 1:n
-       
-            v=intersect(points(1,i),points(2,i))
         
+            v=intersect(points(1,i),points(2,i))
+            
             hash_v=1+length(v)
             
             information+=log(n*hash_v/(u_h*v_h))
-            
+        
         end
-
     end
 
-    information/(n*shuffle_trials)
+    information/(n*shuffle_n)
 
 end
         
 
-        
+function calculate_coefficient(n::Int64,h::Int64,r::Int64)
 
+    value=1.0::Float64
+
+    if r==0
+        for counter in 0:h-1
+            value*=(n-h-counter)/(n-counter)
+         end
+        return value
+    end
+
+    # (h r) (n-h h-r) / (n h)
+    # (h ... r terms) (n-h  (h-r) terms)    (h . . . 1)
+    # (r ... 1)     (h-r . . . 1)         (n ..  h terms)
+    #
+
+    for counter in 0:h-r-1
+        value*= ((n-h-counter)/(n-counter)) * ((h-counter)/(h-r-counter)) 
+    end
+
+    for counter in 0:r-1
+        value*= ((h-counter)/(n-h+r-counter))
+    end
+
+    value
+
+end
+
+
+function background(n::Int64,h::Int64)
+
+    info=0.0::Float64
+
+    for r in 0:h-1
+        info+= calculate_coefficient(n-1,h-1,r)*log( n*(r+1)/(h^2))
+    end
+    
+    info
+
+end
 

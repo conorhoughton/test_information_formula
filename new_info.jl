@@ -1,7 +1,6 @@
 include("./get_spike_trains.jl")
 include("./spike_train_metrics.jl")
 include("./information_from_matrix.jl")
-include("./get_spike_trains.jl")
 include("./metric.jl")
 include("./chop_train.jl")
 
@@ -23,44 +22,61 @@ mu=0.2
 
 dt=0.1*ms::Float64
 
-tau=12*ms
+
 
 #for t in 1:50
 
-window_length=50*ms::Float64
-#h0=100
+window_length=30*ms::Float64
+h=100
+h_stride=20
 
-#while mu<=1
+tau=2*ms
 
-h=20
+trials_n=15
 
-while h<=200
+while tau<=30
 
-    train_length=100*sec::Float64
+    info_av=0
 
-    #h=h0*convert(Int64,floor(train_length/(100*sec)))
+    for _ in 1:trials_n
 
-    sigma_prime=sigma/sqrt(mu^2+(1-mu)^2)
+        train_length=30*sec::Float64
 
-    spike_trains=get_spike_trains([v_t,v_r,e_l,tau_m,tau_ref],[average,sigma_prime,lasts],mu,dt,train_length)
+        #h=h0*convert(Int64,floor(train_length/(100*sec)))
 
-    fragments1=chop_train(spike_trains[1],window_length,train_length)
-    fragments2=chop_train(spike_trains[2],window_length,train_length)
-
-    distances1=new_matrix(fragments1,tau)
-    distances2=new_matrix(fragments2,tau)
-
-    info=information_from_matrix(distances1,distances2,h,h)/window_length
-
-    fragments2=shuffle!(fragments2)
-    distances2=new_matrix(fragments2,tau)
-
-    info_noise=information_from_matrix(distances1,distances2,h,h)/window_length
-
-    println(h," ",info-info_noise," ",info," ",info_noise)
-
-#    mu+=0.025
+        sigma_prime=sigma/sqrt(mu^2+(1-mu)^2)
+        
+        spike_trains=get_spike_trains([v_t,v_r,e_l,tau_m,tau_ref],[average,sigma_prime,lasts],mu,dt,train_length)
+        
+        fragments1=chop_train(spike_trains[1],window_length,train_length)
+        fragments2=chop_train(spike_trains[2],window_length,train_length)
+        
+        distances1=new_matrix(fragments1,tau)
+        distances2=new_matrix(fragments2,tau)
+        
+        
+        h_best=h
+        info_best=0
+        
+        for h_new in max(20,h-h_stride):2:h+h_stride
+            info=information_from_matrix(distances1,distances2,h_new,h_new)/window_length
+            corrected_info=info-background(length(fragments1),h_new)/window_length
+            if corrected_info> info_best
+                info_best=corrected_info
+                h_best=h_new
+            end
+            
+        end
+        
+        h=h_best
     
-    h+=10
+        info_av+=info_best
+        
+    end
+    
+    println(tau," ",mu," ",h," ",info_av/trials_n)
+
+    tau+=2*ms
+   
    
 end

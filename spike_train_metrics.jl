@@ -127,8 +127,6 @@ function new_metric(u_train::Array{Float64},v_train::Array{Float64},tau::Float64
     u_spike_train=Spike_Train(u_train,tau)
     v_spike_train=Spike_Train(v_train,tau)
 
-    println(u_spike_train.square_term," ",v_spike_train.square_term)
-
     u_spike_train.square_term+v_spike_train.square_term-cross_term_uv(u_spike_train,v_spike_train,tau)-cross_term_uv(v_spike_train,u_spike_train,tau)
 
 end
@@ -149,8 +147,6 @@ function new_matrix(trains::Array{Array{Float64,1},1},tau::Float64)
     spike_trains=[Spike_Train(train,tau) for train in trains]
 
     matrix=zeros(n,n)
-
-    println(typeof(matrix))
 
     for i in 1:n
         for j in i+1:n

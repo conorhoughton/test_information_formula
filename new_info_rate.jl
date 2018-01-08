@@ -61,14 +61,11 @@ while mu<=1
     h_best=h
     info_best=0
 
-    for h_new in h-h_stride:2:h+h_stride
-        info=information_from_matrix(distances1,distances2,h,h)/window_length
-        info_noise=0.0::Float64
-        for distance_shuffled in distances2_shuffled
-            info_noise+=information_from_matrix(distances1,distance_shuffled,h,h)/window_length
-        end
-        if info-info_noise/shuffle_trials>info_best
-            info_best=info-info_noise/shuffle_trials
+    for h_new in max(40,h-h_stride):2:h+h_stride
+        info=information_from_matrix(distances1,distances2,h_new,h_new)/window_length
+        corrected_info=info-background(length(rates1),h_new)/window_length
+        if corrected_info> info_best
+            info_best=corrected_info
             h_best=h_new
         end
    
