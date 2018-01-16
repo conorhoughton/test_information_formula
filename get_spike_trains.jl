@@ -1,19 +1,19 @@
 
 include("./metric.jl")
 include("./neuron.jl")
-include("./variable_input.jl")
+include("./uniform_variable_input.jl")
 
 function get_spike_trains(neuron_parameters::Array{Float64},input_parameters::Array{Float64},mu::Float64,dt::Float64,time_interval::Float64)
 
     (v_t,v_r,e_l,tau_m,tau_ref)=neuron_parameters
-    (average,sigma,lasts)=input_parameters
+    (max,lasts)=input_parameters
 
     neuron1=Neuron(v_t,v_r,e_l,tau_m,tau_ref)
     neuron2=Neuron(v_t,v_r,e_l,tau_m,tau_ref)
 
-    variable_input=Variable_Input(average,sigma,lasts)
-    variable_input1=Variable_Input(average,sigma,lasts)
-    variable_input2=Variable_Input(average,sigma,lasts)
+    variable_input=Uniform_Variable_Input(max,lasts)
+    variable_input1=Uniform_Variable_Input(max,lasts)
+    variable_input2=Uniform_Variable_Input(max,lasts)
 
     t=0*sec::Float64
     
@@ -25,7 +25,7 @@ function get_spike_trains(neuron_parameters::Array{Float64},input_parameters::Ar
     while t<=t_final
         this_input=get_input!(variable_input,dt)
         this_input1=mu*get_input!(variable_input1,dt)+(1-mu)*this_input
-        this_input2=mu*get_input!(variable_input2,dt)+(1-mu)*this_input
+        this_input2=mu*get_input!(variable_input2,dt)+(1-mu)*(max-this_input)
         if update_neuron!(neuron1,this_input1,dt)
             push!(spike_train1,t)
         end

@@ -3,48 +3,55 @@ include("./spike_train_metrics.jl")
 include("./information_from_matrix.jl")
 include("./metric.jl")
 include("./chop_train.jl")
+include("./neuron_parameters.jl")
+include("./save.jl")
 
-v_t=-55*mv::Float64
-v_r=-70*mv::Float64
-e_l=-70*mv::Float64
+foldername=Foldername()
+copy_source(foldername,"new_info.jl")
 
-tau_m=12*ms::Float64
-tau_ref=5*ms::Float64
-
-
-average=18*mv::Float64
-sigma=8*mv::Float64
-
-lasts=30*ms::Float64
 
 #mu=1.0 corresponds to independent
-mu=0.2
 
-dt=0.1*ms::Float64
-
+mu=0.0
 
 
 #for t in 1:50
 
-window_length=30*ms::Float64
-h=100
-h_stride=20
+window_length=50*ms::Float64
+h=70
+big_h_stride=25
+small_h_stride=8
 
-tau=2*ms
+tau=20*ms
 
-trials_n=15
+trials_n=5
 
-while tau<=30
+train_length=100*sec::Float64
 
-    info_av=0
+run_parameter_names=["mu","window_length","h","big_h_stride","small_h_stride","tau","train_length","trials_n"]
+run_parameters=Any["varies",window_length,h,big_h_stride,small_h_stride,tau,train_length,trials_n]
 
-    for _ in 1:trials_n
 
-        train_length=30*sec::Float64
+save_to_log(foldername,vcat(neuron_parameters,run_parameters),vcat(neuron_parameter_names,run_parameter_names),"new")
 
-        #h=h0*convert(Int64,floor(train_length/(100*sec)))
+small_file=open(string(foldername.name,"/info.dat"),"w")
+big_file=open(string(foldername.name,"/all_data.dat"),"w")
 
-        sigma_prime=sigma/sqrt(mu^2+(1-mu)^2)
+key_file=open(string(foldername.name,"/README"),"w")
+
+write(key_file,"info.dat:  mu average_info_over_trials\n")
+write(key_file,"all_data.dat:  mu info_for_each_trial h_value_for_each_trial\n")
+
+close(key_file)
+
+while mu<=1
+
+    sigma_prime=sigma/sqrt(mu^2+(1-mu)^2)
+
+    info_av=Float64[]
+    h_av=Float64[]
+
+    for trial_c in 1:trials_n
         
         spike_trains=get_spike_trains([v_t,v_r,e_l,tau_m,tau_ref],[average,sigma_prime,lasts],mu,dt,train_length)
         
@@ -58,7 +65,13 @@ while tau<=30
         h_best=h
         info_best=0
         
-        for h_new in max(20,h-h_stride):2:h+h_stride
+        if trial_c==1
+            stride=big_h_stride
+        else
+            stride=small_h_stride
+        end
+
+        for h_new in max(10,h-stride):2:h+stride
             info=information_from_matrix(distances1,distances2,h_new,h_new)/window_length
             corrected_info=info-background(length(fragments1),h_new)/window_length
             if corrected_info> info_best
@@ -70,13 +83,28 @@ while tau<=30
         
         h=h_best
     
-        info_av+=info_best
+        push!(h_av,h)
+        push!(info_av,info_best)
         
     end
     
-    println(tau," ",mu," ",h," ",info_av/trials_n)
+    av=mean(info_av)
 
-    tau+=2*ms
-   
-   
+    println(mu," ",av)
+
+    write(small_file,"$mu $av\n")
+
+    write(big_file,"$mu $info_av $h_av\n")
+
+
+    flush(small_file)
+    flush(big_file)
+
+    mu+=0.1
+      
 end
+
+close(small_file)
+close(big_file)
+
+comment_to_log()
