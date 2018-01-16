@@ -12,7 +12,7 @@ copy_source(foldername,"new_info.jl")
 
 #mu=1.0 corresponds to independent
 
-mu=0.0
+mu=0.2
 
 
 #for t in 1:50
@@ -26,10 +26,10 @@ tau=20*ms
 
 trials_n=5
 
-train_length=100*sec::Float64
+train_length=50*sec::Float64
 
 run_parameter_names=["mu","window_length","h","big_h_stride","small_h_stride","tau","train_length","trials_n"]
-run_parameters=Any["varies",window_length,h,big_h_stride,small_h_stride,tau,train_length,trials_n]
+run_parameters=Any[mu,window_length,h,big_h_stride,small_h_stride,tau,"varies",trials_n]
 
 
 save_to_log(foldername,vcat(neuron_parameters,run_parameters),vcat(neuron_parameter_names,run_parameter_names),"new")
@@ -44,16 +44,14 @@ write(key_file,"all_data.dat:  mu info_for_each_trial h_value_for_each_trial\n")
 
 close(key_file)
 
-while mu<=1
-
-    sigma_prime=sigma/sqrt(mu^2+(1-mu)^2)
+while train_length<1000*sec
 
     info_av=Float64[]
     h_av=Float64[]
 
     for trial_c in 1:trials_n
         
-        spike_trains=get_spike_trains([v_t,v_r,e_l,tau_m,tau_ref],[average,sigma_prime,lasts],mu,dt,train_length)
+        spike_trains=get_spike_trains([v_t,v_r,e_l,tau_m,tau_ref],[input_max,lasts],mu,dt,train_length)
         
         fragments1=chop_train(spike_trains[1],window_length,train_length)
         fragments2=chop_train(spike_trains[2],window_length,train_length)
@@ -90,17 +88,16 @@ while mu<=1
     
     av=mean(info_av)
 
-    println(mu," ",av)
+    println(train_length," ",av)
 
     write(small_file,"$mu $av\n")
 
-    write(big_file,"$mu $info_av $h_av\n")
-
+    write(big_file,"$train_length $info_av $h_av\n")
 
     flush(small_file)
     flush(big_file)
 
-    mu+=0.1
+    train_length+=50*sec
       
 end
 
