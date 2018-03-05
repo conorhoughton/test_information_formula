@@ -17,7 +17,7 @@ mu=0.0
 word_length=25
 letter_length=2*ms
 
-train_length=10000*sec::Float64
+train_length=100*sec::Float64
 
 trials_n=5
 
@@ -37,7 +37,7 @@ write(key_file,"info.dat:  mu average_info_over_trials\n")
 write(key_file,"all_data.dat:  mu info_for_each_trial\n")
 
 
-while train_length<50000*sec
+while train_length<150000*sec
 
 #    sigma_prime=sigma/sqrt(mu^2+(1-mu)^2)
     
@@ -73,7 +73,7 @@ while train_length<50000*sec
     flush(small_file)
     flush(big_file)
 
-    train_length+=500*sec
+    train_length*=1.5*sec
    
 end
 
