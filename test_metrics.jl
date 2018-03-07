@@ -1,10 +1,12 @@
 include("./spike_train_metrics.jl")
 include("./metric.jl")
 
-u_train=[0.1,0.3,0.5,0.7]
-v_train=[0.11,0.3,0.6,0.7,0.8]
-w_train=[0.09,0.1,0.11]
-tau=12*ms
+
+u_train=[0.01581]
+v_train=[0.0071]
+w_train=[0.0158]
+
+tau=20*ms
 
 #println(traditional_metric(u_train,v_train,tau))
 #println(traditional_metric(u_train,w_train,tau))

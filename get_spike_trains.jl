@@ -11,7 +11,7 @@ function get_spike_trains(neuron_parameters::Array{Float64},input_parameters::Ar
     neuron1=Neuron(v_t,v_r,e_l,tau_m,tau_ref)
     neuron2=Neuron(v_t,v_r,e_l,tau_m,tau_ref)
 
-    variable_input=Uniform_Variable_Input(max,lasts)
+    variable_input =Uniform_Variable_Input(max,lasts)
     variable_input1=Uniform_Variable_Input(max,lasts)
     variable_input2=Uniform_Variable_Input(max,lasts)
 

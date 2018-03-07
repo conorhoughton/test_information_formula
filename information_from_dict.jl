@@ -33,8 +33,6 @@ function information_from_dict(table::Dict{Array{Int64},Int64})
         information+=p12*log(p12/(p1*p2))
     end
 
-#    print(marginal1[0]/total," ",marginal2[0]/total," ",table[[0,0]]/total," ")
-
     if information<0
         println("negative information f/p")
         println(table)

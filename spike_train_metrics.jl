@@ -1,8 +1,6 @@
 
 function traditional_metric(u_train::Array{Float64},v_train::Array{Float64},tau::Float64)
 
-    println(trad_square_term(u_train,tau)," ",trad_square_term(v_train,tau))
-
     trad_square_term(u_train,tau)+trad_square_term(v_train,tau)-2*trad_cross_term(u_train,v_train,tau)
 
 end
@@ -110,10 +108,12 @@ function cross_term_uv(u_train::Spike_Train,v_train::Spike_Train,tau)
             big_j+=1
         end
         m=v_train.markage_vector[big_j]
-        if u_train.train[i] != v_train.train[big_j]
-            uv+=(1+m)*exp(-abs(u_train.train[i]-v_train.train[big_j])/tau)
-        else
-            uv+=(1/2+m)
+        if v_train.train[big_j] <= u_train.train[i]
+            if u_train.train[i] != v_train.train[big_j]  
+                uv+=(1+m)*exp(-abs(u_train.train[i]-v_train.train[big_j])/tau)
+            else
+                uv+=(1.0/2+m)
+            end
         end
     end
 
@@ -153,6 +153,13 @@ function new_matrix(trains::Array{Array{Float64,1},1},tau::Float64)
             distance=new_distance(spike_trains[i],spike_trains[j],tau)
             matrix[i,j]=distance
             matrix[j,i]=distance
+            # if distance <0
+            #     println(distance)
+            #     println(traditional_metric(spike_trains[i].train,spike_trains[j].train,tau))
+            #     println(spike_trains[i].train)
+            #     println(spike_trains[j].train)
+            #     println("\n")
+            #end
         end
     end
 

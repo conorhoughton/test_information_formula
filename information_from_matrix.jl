@@ -1,7 +1,13 @@
 
 function information_from_matrix(u_distances::Array{Float64,2},v_distances::Array{Float64,2},u_h::Int64,v_h::Int64)
+    information_from_matrix(u_distances,v_distances,u_h,v_h,1)
+end
+
+function information_from_matrix(u_distances::Array{Float64,2},v_distances::Array{Float64,2},u_h::Int64,v_h::Int64,leave_out::Int64)
 
     n=size(u_distances)[1]
+
+    h=[u_h,v_h]
 
     if n!= size(u_distances)[2] || n!=size(v_distances)[1] || n!=size(v_distances)[2]
         println("distance matrix size f/p")
@@ -10,29 +16,71 @@ function information_from_matrix(u_distances::Array{Float64,2},v_distances::Arra
     information=0
 
     function points(u::Int64,i::Int64)
-        excised=vcat(distances[u][i,1:i-1],distances[u][i,i+1:end])
-        [convert(Int64,x[1]) for x in sort!(shuffle([[i,d] for (i,d) in enumerate(excised)]),by = x -> x[2])[1:u_h]]
+        lhs=[ [j,d] for (j,d) in enumerate(distances[u][i,1:i-1]) ]
+        rhs=[[j+i,d] for (j,d) in enumerate(distances[u][i,i+1:end]) ]
+        excised=vcat(lhs,rhs)
+        [convert(Int64,x[1]) for x in sort!(shuffle(excised),by = x -> x[2])[1:h[u]]]
     end
 
     distances=(u_distances,v_distances)
 
     shuffle_n=1
 
+    total_added=0
+
     for _ in 1:shuffle_n
         for i in 1:n
         
             v=intersect(points(1,i),points(2,i))
             
-            hash_v=1+length(v)
-            
-            information+=log(n*hash_v/(u_h*v_h))
-        
+            hash_v=leave_out+length(v)
+
+            if hash_v>0
+                information+=log((n+leave_out-1)*hash_v/(u_h*v_h))
+                total_added+=1
+            end
+
         end
     end
 
-    information/(n*shuffle_n)
+    information/total_added
 
 end
+
+function j_from_matrix(u_distances::Array{Float64,2},v_distances::Array{Float64,2},h::Int64)
+
+    n=size(u_distances)[1]
+
+    if n!= size(u_distances)[2] || n!=size(v_distances)[1] || n!=size(v_distances)[2]
+        println("distance matrix size f/p")
+    end
+
+    function points(u::Int64,i::Int64,this_h)
+        excised=vcat(distances[u][i,1:i-1],distances[u][i,i+1:end])
+        [convert(Int64,x[1]) for x in sort!(shuffle([[i,d] for (i,d) in enumerate(excised)]),by = x -> x[2])[1:this_h]]
+    end
+
+    big_j=0
+    
+    distances=(u_distances,v_distances)
+
+    total_points=0
+
+    for i in 1:n
+        
+        v=intersect(points(1,i,h-1),points(2,i,h-1))
+        hash_v=1+length(v)
+
+
+        big_j+=-n*hash_v/h^2*log(n*hash_v/h^2)
+ 
+    end
+
+    big_j/n
+
+end
+
+
         
 
 function calculate_coefficient(n::Int64,h::Int64,r::Int64)
@@ -76,3 +124,15 @@ function background(n::Int64,h::Int64)
 
 end
 
+
+function background_leave_out(n::Int64,h::Int64)
+
+    info=0.0::Float64
+
+    for r in 1:h
+        info+= calculate_coefficient(n-1,h,r)*log( (n-1)*r/(h^2))
+    end
+
+    info
+
+end
