@@ -12,11 +12,11 @@ copy_source(foldername,"neuron_parameters.jl")
 
 #mu=1.0 corresponds to independent
 
-mu=0.2
+mu=0.3
 
 #for t in 1:50
 
-window_length=30*ms::Float64
+window_length=50*ms::Float64
 
 big_h_stride=100
 small_h_stride=8
@@ -25,9 +25,9 @@ h=76
 
 tau=20*ms
 
-trials_n=1
+trials_n=20
 
-train_length=300*sec::Float64
+train_length=50*sec::Float64
 
 run_parameter_names=["mu","window_length","h","big_h_stride","small_h_stride","tau","train_length","trials_n"]
 run_parameters=Any[mu,window_length,"not in use","not in use","not in use",tau,"varies",trials_n]
@@ -46,7 +46,7 @@ close(key_file)
 
 #while train_length<=600*sec
 #while window_length<=150*ms
-while mu<1.0
+#while mu<1.0
 
 #    train_length=window_length/ms
 
@@ -104,11 +104,11 @@ while mu<1.0
     flush(small_file)
     flush(big_file)
 
-    mu+=0.1
+#    mu+=0.1
 
 #    window_length+=10*ms
 
-#    train_length+=100*sec
+    train_length+=50*sec
 
 end
 
