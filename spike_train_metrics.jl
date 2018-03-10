@@ -153,13 +153,6 @@ function new_matrix(trains::Array{Array{Float64,1},1},tau::Float64)
             distance=new_distance(spike_trains[i],spike_trains[j],tau)
             matrix[i,j]=distance
             matrix[j,i]=distance
-            # if distance <0
-            #     println(distance)
-            #     println(traditional_metric(spike_trains[i].train,spike_trains[j].train,tau))
-            #     println(spike_trains[i].train)
-            #     println(spike_trains[j].train)
-            #     println("\n")
-            #end
         end
     end
 
@@ -167,7 +160,24 @@ function new_matrix(trains::Array{Array{Float64,1},1},tau::Float64)
 
 end
 
+function sort_distances(distances::Array{Float64,2})
 
+    function points(i::Int64)
+        lhs=[ [j,d] for (j,d) in enumerate(distances[i,1:i-1]) ]
+        rhs=[[j+i,d] for (j,d) in enumerate(distances[i,i+1:end]) ]
+        excised=vcat(lhs,rhs)
+        [convert(Int64,x[1]) for x in sort!(shuffle(excised),by = x -> x[2])]
+    end
+
+    points_vector=Vector{Vector{Int64}}(0)
+
+    for i in 1:size(distances)[1]
+        push!(points_vector,points(i))
+    end
+
+    points_vector
+
+end
 
 function rate_distance_matrix(rates::Array{Float64})
 

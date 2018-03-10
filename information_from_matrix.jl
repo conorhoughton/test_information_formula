@@ -13,8 +13,6 @@ function information_from_matrix(u_distances::Array{Float64,2},v_distances::Arra
         println("distance matrix size f/p")
     end
 
-    information=0
-
     function points(u::Int64,i::Int64)
         lhs=[ [j,d] for (j,d) in enumerate(distances[u][i,1:i-1]) ]
         rhs=[[j+i,d] for (j,d) in enumerate(distances[u][i,i+1:end]) ]
@@ -22,30 +20,58 @@ function information_from_matrix(u_distances::Array{Float64,2},v_distances::Arra
         [convert(Int64,x[1]) for x in sort!(shuffle(excised),by = x -> x[2])[1:h[u]]]
     end
 
-    distances=(u_distances,v_distances)
+    information=0.0::Float64
 
-    shuffle_n=1
+    distances=(u_distances,v_distances)
 
     total_added=0
 
-    for _ in 1:shuffle_n
-        for i in 1:n
+
+    for i in 1:n
         
-            v=intersect(points(1,i),points(2,i))
-            
-            hash_v=leave_out+length(v)
-
-            if hash_v>0
-                information+=log((n+leave_out-1)*hash_v/(u_h*v_h))
-                total_added+=1
-            end
-
+        v=intersect(points(1,i),points(2,i))
+        
+        hash_v=leave_out+length(v)
+        
+        if hash_v>0
+            information+=log((n+leave_out-1)*hash_v/(u_h*v_h))
+            total_added+=1
         end
+        
     end
+    
 
     information/total_added
 
 end
+
+
+function information_from_matrix(u_points::Vector{Vector{Int64}},v_points::Vector{Vector{Int64}},u_h::Int64,v_h::Int64,leave_out::Int64)
+
+    n=size(u_points)[1]
+
+    information=0.0::Float64
+
+    total_added=0::Int64
+
+
+    for i in 1:n
+                                 
+        v=intersect(u_points[i][1:u_h],v_points[i][1:v_h]) 
+            
+        hash_v=leave_out+length(v)
+
+        if hash_v>0
+            information+=log((n+leave_out-1)*hash_v/(u_h*v_h))
+            total_added+=1
+        end
+
+    end
+    
+    information/total_added
+
+end
+
 
 function j_from_matrix(u_distances::Array{Float64,2},v_distances::Array{Float64,2},h::Int64)
 
