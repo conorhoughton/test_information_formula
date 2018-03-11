@@ -1,0 +1,11 @@
+
+long run for train length for bialek with 20 trials and mu=0.3 and word length 30 with discretization step 1ms
+
+word_length=30::Int64
+letter_length=1*ms
+
+train_length=200000*sec::Float64
+
+trials_n=20
+
+mu=0.3
