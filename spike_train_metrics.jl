@@ -166,7 +166,7 @@ function sort_distances(distances::Array{Float64,2})
         lhs=[ [j,d] for (j,d) in enumerate(distances[i,1:i-1]) ]
         rhs=[[j+i,d] for (j,d) in enumerate(distances[i,i+1:end]) ]
         excised=vcat(lhs,rhs)
-        [convert(Int64,x[1]) for x in sort!(shuffle(excised),by = x -> x[2])]
+        Int64[convert(Int64,x[1]) for x in sort!(shuffle(excised),by = x -> x[2])]
     end
 
     points_vector=Vector{Vector{Int64}}(0)

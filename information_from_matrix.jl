@@ -48,6 +48,18 @@ end
 
 function information_from_matrix(u_points::Vector{Vector{Int64}},v_points::Vector{Vector{Int64}},u_h::Int64,v_h::Int64,leave_out::Int64)
 
+
+   function convert_to_sets(points,h)
+     points_set=Vector{Set{Int64}}(0)	
+     for p in points
+         push!(points_set,Set{Int64}(a for a in p[1:h]))
+     end
+     points_set
+    end
+
+    u_sets=convert_to_sets(u_points,u_h)
+    v_sets=convert_to_sets(v_points,v_h)
+    
     n=size(u_points)[1]
 
     information=0.0::Float64
@@ -57,7 +69,7 @@ function information_from_matrix(u_points::Vector{Vector{Int64}},v_points::Vecto
 
     for i in 1:n
                                  
-        v=intersect(u_points[i][1:u_h],v_points[i][1:v_h]) 
+        v=intersect(u_sets[i],v_sets[i]) 
             
         hash_v=leave_out+length(v)
 

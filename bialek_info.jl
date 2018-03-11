@@ -1,19 +1,18 @@
-include("./get_spike_trains.jl")
-include("./trains_to_word.jl")
-include("./information_from_dict.jl")
-include("./neuron_parameters.jl")
-include("./save.jl")
+#!/cm/shared/languages/Julia-0.6.2/julia-0.6.2/bin/julia
+path_name="/panfs/panasas01/cosc/cscjh/test_information_formula/"
+include("/panfs/panasas01/cosc/cscjh/test_information_formula/get_spike_trains.jl")
+include("/panfs/panasas01/cosc/cscjh/test_information_formula/trains_to_word.jl")
+include("/panfs/panasas01/cosc/cscjh/test_information_formula/information_from_dict.jl")
+include("/panfs/panasas01/cosc/cscjh/test_information_formula/neuron_parameters.jl")
+include("/panfs/panasas01/cosc/cscjh/test_information_formula/save.jl")
 
 foldername=Foldername()
-copy_source(foldername,"bialek_info.jl")
-copy_source(foldername,"neuron_parameters.jl")
 
 #mu=1.0 corresponds to independent
-mu=0.2
-word_length=50::Int64
+word_length=30::Int64
 letter_length=1*ms
 
-train_length=10000*sec::Float64
+train_length=200000*sec::Float64
 
 trials_n=20
 
@@ -33,7 +32,7 @@ write(key_file,"info.dat:  mu average_info_over_trials\n")
 write(key_file,"all_data.dat:  mu info_for_each_trial\n")
 
 
-while train_length<500000*sec
+while train_length<1500000*sec
 #while mu<=1.0
 
 #    sigma_prime=sigma/sqrt(mu^2+(1-mu)^2)
@@ -53,6 +52,7 @@ while train_length<500000*sec
         info_shuffled=information_from_dict(frequency_table_shuffled.table)/(word_length*letter_length)
 
         push!(info_av,info-info_shuffled)
+#        push!(info_av,info)	
 
     end
     
@@ -68,8 +68,8 @@ while train_length<500000*sec
     flush(small_file)
     flush(big_file)
 
-    train_length+=10000*sec
-    #mu+=0.1
+    train_length+=100000*sec
+
  
 end
 
