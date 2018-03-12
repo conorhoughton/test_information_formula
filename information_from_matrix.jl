@@ -50,9 +50,9 @@ function information_from_matrix(u_points::Vector{Vector{Int64}},v_points::Vecto
 
 
    function convert_to_sets(points,h)
-     points_set=Vector{Set{Int64}}(0)	
-     for p in points
-         push!(points_set,Set{Int64}(a for a in p[1:h]))
+     points_set=Vector{Set{Int64}}(length(points))	
+     for (i,p) in enumerate(points)
+         points_set[i]=Set{Int64}(a for a in p[1:h])
      end
      points_set
     end

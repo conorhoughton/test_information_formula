@@ -1,12 +1,11 @@
-#!/cm/shared/languages/Julia-0.6.2/julia-0.6.2/bin/julia
-path_name="/panfs/panasas01/cosc/cscjh/test_information_formula/"
-include("/panfs/panasas01/cosc/cscjh/test_information_formula/get_spike_trains.jl")
-include("/panfs/panasas01/cosc/cscjh/test_information_formula/spike_train_metrics.jl")
-include("/panfs/panasas01/cosc/cscjh/test_information_formula/information_from_matrix.jl")
-include("/panfs/panasas01/cosc/cscjh/test_information_formula/metric.jl")
-include("/panfs/panasas01/cosc/cscjh/test_information_formula/chop_train.jl")
-include("/panfs/panasas01/cosc/cscjh/test_information_formula/neuron_parameters.jl")
-include("/panfs/panasas01/cosc/cscjh/test_information_formula/save.jl")
+
+include("./get_spike_trains.jl")
+include("./spike_train_metrics.jl")
+include("./information_from_matrix.jl")
+include("./metric.jl")
+include("./chop_train.jl")
+include("./neuron_parameters.jl")
+include("./save.jl")
 
 foldername=Foldername()
 
@@ -18,9 +17,9 @@ window_length=30*ms::Float64
 
 tau=20*ms
 
-trials_n=20
+trials_n=1
 
-train_length=400*sec::Float64
+train_length=500*sec::Float64
 
 run_parameter_names=["mu","window_length","h","big_h_stride","small_h_stride","tau","train_length","trials_n"]
 run_parameters=Any[mu,window_length,"not in use","not in use","not in use",tau,"varies",trials_n]
@@ -39,7 +38,9 @@ close(key_file)
 
 old_h=convert(Int64,floor(2*train_length))	
 
-while train_length<=1000*sec
+#@profile begin
+
+while train_length<=500*sec
 #while window_length<=150*ms
 #while mu<1.0
 
@@ -51,18 +52,31 @@ while train_length<=1000*sec
     
     for trial_c in 1:trials_n
        
+        println("get spike trains")
 
-        spike_trains=get_spike_trains([v_t,v_r,e_l,tau_m,tau_ref],[input_max,lasts],mu,dt,train_length)
+        @time spike_trains=get_spike_trains([v_t,v_r,e_l,tau_m,tau_ref],[input_max,lasts],mu,dt,train_length)
         
-        fragments=chop_train(spike_trains[1],window_length,train_length)
-        points_1=sort_distances(new_matrix(fragments,tau))
+        println("get fragments")
 
-        fragments=chop_train(spike_trains[2],window_length,train_length)
-    	points_2=sort_distances(new_matrix(fragments,tau))
+        @time fragments=chop_train(spike_trains[1],window_length,train_length)
+
+        println("sort")
+
+        @time points_1=get_and_sort_distances(fragments,tau,old_h)
+
+        println("get fragments")
+
+        @time fragments=chop_train(spike_trains[2],window_length,train_length)
+
+        println("sort")
+
+#    	@time points_2=sort_distances(new_matrix(fragments,tau),old_h)
+    	@time points_2=get_and_sort_distances(fragments,tau,old_h)
 
 	fragments=length(fragments)
 
 	spike_train=0
+
 
         function correct_info(h_new)
     
@@ -70,7 +84,10 @@ while train_length<=1000*sec
             
             info-background(fragments,h_new)/window_length
 
+
         end
+        
+        println("info")
 
         phi=(1.0+sqrt(5.0))/2.0
 
@@ -82,26 +99,27 @@ while train_length<=1000*sec
         c = convert(Int64,floor(b-(b- a)/phi))
         d = convert(Int64,floor(a + (b- a)/phi))
         
-        info_c=correct_info(c)
-        info_d=correct_info(d)
+        @time info_c=correct_info(c)
+        @time info_d=correct_info(d)
 
         
         while abs(d-c)>2
+            println(a," ",c," ",d," ",b)
             if info_c>info_d
                 b=d
+                d=c
+                c = convert(Int64,floor(b-(b- a)/phi))                
+                info_d=info_c
+                @time info_c=correct_info(c)                
+
             else
                 a=c
+                c=d
+                d = convert(Int64,floor(a + (b- a)/phi))
+                info_c=info_d
+                @time info_d=correct_info(d)                
+
             end
-
-        
-            c = convert(Int64,floor(b-(b- a)/phi))
-            d = convert(Int64,floor(a + (b- a)/phi))
-            
-            info_c=correct_info(c)
-            info_d=correct_info(d)
-
-
-	   
 
         end
         
@@ -139,4 +157,9 @@ end
 close(small_file)
 close(big_file)
 
-comment_to_log()
+#end
+
+#Profile.print()
+
+
+#comment_to_log()

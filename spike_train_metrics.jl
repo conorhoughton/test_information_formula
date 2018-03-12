@@ -161,6 +161,11 @@ function new_matrix(trains::Array{Array{Float64,1},1},tau::Float64)
 end
 
 function sort_distances(distances::Array{Float64,2})
+    sort_distances(distances,size(distances)[1])
+end
+
+
+function sort_distances(distances::Array{Float64,2},h::Int64)
 
     function points(i::Int64)
         lhs=[ [j,d] for (j,d) in enumerate(distances[i,1:i-1]) ]
@@ -169,15 +174,56 @@ function sort_distances(distances::Array{Float64,2})
         Int64[convert(Int64,x[1]) for x in sort!(shuffle(excised),by = x -> x[2])]
     end
 
-    points_vector=Vector{Vector{Int64}}(0)
+
+    function new_points(i::Int64)
+        Int64[x[1] for x in sort!(shuffle([a for a in enumerate(distances[i,:])]),by = x -> x[2]) if x[1]!=i][1:h]
+    end
+
+
+    points_vector=Vector{Vector{Int64}}(size(distances)[1])
 
     for i in 1:size(distances)[1]
-        push!(points_vector,points(i))
+        points_vector[i]=new_points(i)
     end
 
     points_vector
 
 end
+
+
+function get_and_sort_distances(trains::Array{Array{Float64,1},1},tau::Float64,h::Int64)
+
+
+    function new_points(i::Int64)
+        Int64[x[1] for x in sort!(shuffle([a for a in enumerate(distances[:])]),by = x -> x[2]) if x[1]!=i][1:h]
+    end
+
+
+
+    n=length(trains)    
+    spike_trains=[Spike_Train(train,tau) for train in trains]
+
+    distances=Vector{Float64}(n)
+    points_vector=Vector{Vector{Int64}}(size(distances)[1])
+
+    for i in 1:n
+        for j in 1:n
+            if i==j
+                distances[j]=0.0
+            else
+                distances[j]=new_distance(spike_trains[i],spike_trains[j],tau)
+            end
+        end
+
+        points_vector[i]=new_points(i)
+
+    end
+
+    points_vector
+
+end
+
+
 
 function rate_distance_matrix(rates::Array{Float64})
 

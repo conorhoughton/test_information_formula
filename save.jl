@@ -5,8 +5,8 @@ struct Foldername
 
     function Foldername()
         time=Dates.format(now(),"yyyy-mm-dd-HH-MM-SS")
-        run(`mkdir /panfs/panasas01/cosc/cscjh/test_information_formula/results/$time/`)
-        new("/panfs/panasas01/cosc/cscjh/test_information_formula/results/$time")
+        run(`mkdir ./results/$time/`)
+        new("./results/$time")
     end
 
 end
@@ -18,7 +18,7 @@ end
 
 function save_to_log(foldername::Foldername,parameters::Array{Any},parameter_names::Array{String},run_type::String)
 
-    file=open("/panfs/panasas01/cosc/cscjh/test_information_formula/results/log.txt","a")
+    file=open("./results/log.txt","a")
     write(file,"\n")
     write(file,foldername.name,"\n")
     write(file,run_type,"\n")
@@ -36,7 +36,7 @@ function comment_to_log()
     println("comment: ")
     message=readline(STDIN)
 
-    file=open("/panfs/panasas01/cosc/cscjh/test_information_formula/results/log.txt","a")
+    file=open("./results/log.txt","a")
     write(file,"$message\n")
 
 end
