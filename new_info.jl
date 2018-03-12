@@ -1,11 +1,5 @@
 
-include("./get_spike_trains.jl")
-include("./spike_train_metrics.jl")
-include("./information_from_matrix.jl")
-include("./metric.jl")
-include("./chop_train.jl")
-include("./neuron_parameters.jl")
-include("./save.jl")
+include("./new_info_header.jl")
 
 foldername=Foldername()
 
@@ -17,7 +11,7 @@ window_length=30*ms::Float64
 
 tau=20*ms
 
-trials_n=1
+trials_n=20
 
 train_length=500*sec::Float64
 
@@ -40,7 +34,7 @@ old_h=convert(Int64,floor(2*train_length))
 
 #@profile begin
 
-while train_length<=500*sec
+while train_length<=700*sec
 #while window_length<=150*ms
 #while mu<1.0
 
@@ -52,26 +46,18 @@ while train_length<=500*sec
     
     for trial_c in 1:trials_n
        
-        println("get spike trains")
-
-        @time spike_trains=get_spike_trains([v_t,v_r,e_l,tau_m,tau_ref],[input_max,lasts],mu,dt,train_length)
         
-        println("get fragments")
 
-        @time fragments=chop_train(spike_trains[1],window_length,train_length)
+        spike_trains=get_spike_trains([v_t,v_r,e_l,tau_m,tau_ref],[input_max,lasts],mu,dt,train_length)
+        
 
-        println("sort")
+        fragments=chop_train(spike_trains[1],window_length,train_length)
 
-        @time points_1=get_and_sort_distances(fragments,tau,old_h)
+        points_1=get_and_sort_distances(fragments,tau,old_h)
 
-        println("get fragments")
+        fragments=chop_train(spike_trains[2],window_length,train_length)
 
-        @time fragments=chop_train(spike_trains[2],window_length,train_length)
-
-        println("sort")
-
-#    	@time points_2=sort_distances(new_matrix(fragments,tau),old_h)
-    	@time points_2=get_and_sort_distances(fragments,tau,old_h)
+    	points_2=get_and_sort_distances(fragments,tau,old_h)
 
 	fragments=length(fragments)
 
@@ -91,7 +77,7 @@ while train_length<=500*sec
 
         phi=(1.0+sqrt(5.0))/2.0
 
-	stride=min(1.5*old_h,fragments)
+	stride=min(2*old_h,fragments)
 
         a=10
         b=stride
@@ -99,25 +85,24 @@ while train_length<=500*sec
         c = convert(Int64,floor(b-(b- a)/phi))
         d = convert(Int64,floor(a + (b- a)/phi))
         
-        @time info_c=correct_info(c)
-        @time info_d=correct_info(d)
+        info_c=correct_info(c)
+        info_d=correct_info(d)
 
         
         while abs(d-c)>2
-            println(a," ",c," ",d," ",b)
             if info_c>info_d
                 b=d
                 d=c
                 c = convert(Int64,floor(b-(b- a)/phi))                
                 info_d=info_c
-                @time info_c=correct_info(c)                
+                info_c=correct_info(c)                
 
             else
                 a=c
                 c=d
                 d = convert(Int64,floor(a + (b- a)/phi))
                 info_c=info_d
-                @time info_d=correct_info(d)                
+                info_d=correct_info(d)                
 
             end
 
