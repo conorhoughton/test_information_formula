@@ -1,0 +1,2 @@
+awk '{a[$2]+=$3;c[$2]+=$4;b[$2]+=1}END{for(t=10;t<1005;t+=5){print t" "0.03*a[t]/b[t]" "0.03*c[t]/b[t];}}' < info.dat> uncorr_av.dat
+
