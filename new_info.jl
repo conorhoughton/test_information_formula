@@ -30,7 +30,7 @@ write(key_file,"all_data.dat:  mu info_for_each_trial h_value_for_each_trial\n")
 
 close(key_file)
 
-old_h=convert(Int64,floor(2*train_length))	
+
 
 #@profile begin
 
@@ -40,29 +40,29 @@ while train_length<=700*sec
 
 #    train_length=window_length/ms
 
+    old_h=convert(Int64,floor(2*train_length))	
+
+    biggest_h=old_h
 
     info_av=Float64[]
     h_av=Float64[]
     
     for trial_c in 1:trials_n
        
-        
-
         spike_trains=get_spike_trains([v_t,v_r,e_l,tau_m,tau_ref],[input_max,lasts],mu,dt,train_length)
         
 
         fragments=chop_train(spike_trains[1],window_length,train_length)
 
-        points_1=get_and_sort_distances(fragments,tau,old_h)
+        points_1=get_and_sort_distances(fragments,tau,biggest_h)
 
         fragments=chop_train(spike_trains[2],window_length,train_length)
 
-    	points_2=get_and_sort_distances(fragments,tau,old_h)
+    	points_2=get_and_sort_distances(fragments,tau,biggest_h)
 
 	fragments=length(fragments)
 
 	spike_train=0
-
 
         function correct_info(h_new)
     
@@ -77,7 +77,7 @@ while train_length<=700*sec
 
         phi=(1.0+sqrt(5.0))/2.0
 
-	stride=min(2*old_h,fragments)
+	stride=min(2*old_h,fragments,biggest_h)
 
         a=10
         b=stride
@@ -90,6 +90,7 @@ while train_length<=700*sec
 
         
         while abs(d-c)>2
+            println(a," ",c," ",d," ",b," ",biggest_h)
             if info_c>info_d
                 b=d
                 d=c
