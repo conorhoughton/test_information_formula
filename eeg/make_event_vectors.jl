@@ -1,11 +1,26 @@
 
-function make_event_vectors()
+function make_event_vectors(p::Float64)
 
     function get_rand()
-        rand(-1.5:0.5:1.5)
+        rand(-3:3)
     end
 
-    events=Float64[2.0+get_rand(),-3.0+get_rand(),3.0+get_rand(),2.0+get_rand(),5.0+get_rand()]
 
+    coeff_name=Int64[get_rand() for i in 1:5]
+
+    event_name=Int64[]
+    for i in 1:5
+        if rand()<p
+            push!(event_name,coeff_name[i])
+        else
+            push!(event_name,get_rand())
+    
+        end
+    end
+
+    (coeff_name,event_name)
+
+end
+         
     
     
