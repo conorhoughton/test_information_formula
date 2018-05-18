@@ -1,22 +1,23 @@
 
-include("./Polynomials.jl")
 include("../metric.jl")
 
-using Polynomials
+using Dierckx
 
 function make_simulated_erp(events::Vector{Float64})
 
-    ts= Float64[50*ms, 100*ms, 180*ms, 220*ms, 400*ms]
+    unshift!(events,0.0)
+    push!(events,0.0)
+    events=-events
 
-    events=[t^2 for t in ts]
+    ts= Float64[0*ms,50*ms, 100*ms, 180*ms, 220*ms, 400*ms,550*ms]
 
-    println(polyfit(events,ts))
+#    println(polyfit(events,ts))
 
-    polyfit(events,ts)
+    Spline1D(ts,events)
 
 end
 
-function plot_poly(poly::Poly{Float64},length::Float64,timestep::Float64)
+function plot_erp(curve,length::Float64,timestep::Float64)
     
     t=0.0::Float64
 
@@ -24,5 +25,21 @@ function plot_poly(poly::Poly{Float64},length::Float64,timestep::Float64)
         println(t," ",curve(t))
         t+=timestep
     end
+
+end
+
+
+function erp_as_vector(curve,length::Float64,timestep::Float64)
+    
+    t=0.0::Float64
+
+    vector_erp=Float64[]
+
+    while t<length
+        push!(vector_erp,curve(t))
+        t+=timestep
+    end
+
+    vector_erp
 
 end
