@@ -17,26 +17,32 @@ function make_simulated_erp(events::Vector{Float64})
 
 end
 
-function plot_erp(curve,length::Float64,timestep::Float64)
-    
-    t=0.0::Float64
+function plot_erp(curve,time_length::Float64,timestep::Float64,sigma::Float64,lambd::Float64)
 
-    while t<length
-        println(t," ",curve(t))
-        t+=timestep
+    vector_erp=erp_as_vector(curve,time_length,timestep,sigma,lambd)
+    
+    for time_c in 1:length(vector_erp)
+        println((time_c-1)*timestep," ",vector_erp[time_c])
     end
 
 end
 
 
-function erp_as_vector(curve,length::Float64,timestep::Float64)
+function erp_as_vector(curve,length::Float64,timestep::Float64,sigma::Float64,lambd::Float64)
     
+    function noise()
+        sigma*randn()
+    end
+
     t=0.0::Float64
+
+    y=0.0
 
     vector_erp=Float64[]
 
     while t<length
-        push!(vector_erp,curve(t))
+        push!(vector_erp,curve(t)+y)
+        y+=-lambd*y*timestep+noise()*sqrt(timestep)
         t+=timestep
     end
 
