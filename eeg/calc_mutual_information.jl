@@ -9,6 +9,15 @@ struct Erp
 
 end
 
+
+struct Distance
+
+    d::Float64
+    trial::Int64
+
+end
+
+
 function event_to_hash(event::Vector{Int64})
 
     base=1
@@ -50,4 +59,18 @@ for stim_c in 1:stim_n
         push!(erps,Erp(trace,stim_c))
     end
 end
+
+distances=[Distance[] for _ in 1:length(erps)]
+
+for i in 1:length(erps)
+    for j in 1:length(erps)
+        d=0.0::Float64
+        if i!=j
+            d=length(erps[i].trace-erps[j].trace)
+        end
+        push!(distances[i],Distance(d,erps[j].trial))
+    end
+end
+        
+    
 
