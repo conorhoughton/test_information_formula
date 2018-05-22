@@ -32,19 +32,21 @@ function event_to_hash(event::Vector{Int64})
 
 end
 
-trial_n=10
+trial_n=100
 stim_n =10
 
 t_length=0.5
 timestep=0.001
-sigma=0.0
+sigma=1.0
 lambd=10.0
 
-p=0.1
+p=0.2
 
 erps=Erp[]
 
 event_hashes=Int64[]
+
+events=[Int64[] for _ in 1:stim_n]
 
 for stim_c in 1:stim_n
     event=make_event_vector()
@@ -54,6 +56,7 @@ for stim_c in 1:stim_n
         this_hash=event_to_hash(event)
     end
     push!(event_hashes,this_hash)
+    events[stim_c]=event
 
     for trial_c in 1:trial_n
         trace=erp_as_vector(make_simulated_erp(name_to_event(make_erp_vector(event,p))),t_length,timestep,sigma,lambd)
@@ -75,26 +78,34 @@ end
         
 h=trial_n
 
-
+sorted_distances=[Distance[] for _ in 1:length(erps)]
 
 for i in 1:length(erps)
-    sort!(distances[i],by = x -> x.d)
+    sorted_distances[i]=sort(vcat(distances[i][1:i-1],distances[i][i+1:end]),by = x -> x.d)
 end
 
+max=0.0
 
 for h in 1:2*trial_n
     information=0.0
     for i in 1:length(erps)
-        b=0
-        for j in 1:h
-            if distances[i][j].stim==erps[i].stim
+        b=1
+        for j in 1:h-1
+            if sorted_distances[i][j].stim==erps[i].stim
                 b+=1
             end
         end
         
-        information+=log(stim_n*b/h)
+        information+=log2(stim_n*b/h)
+
     end
 
-    println(h," ",information/(trial_n*stim_n*log(2.0))-estimate_background(h,trial_n,stim_n)," ",estimated_ground_truth(stim_n,p))
+    this_info=information/length(erps)-estimate_background(h,trial_n,stim_n)
+
+    if this_info>max
+        max=this_info
+    end
 
 end
+
+println(max," ",numerical_ground_truth(events,p,10000)-numerical_ground_truth_bgd(events,p,10000))
