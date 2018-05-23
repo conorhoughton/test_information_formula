@@ -3,11 +3,11 @@
 function estimate_background(h::Int64,trial_n::Int64,stim_n::Int64)
 
 
-    function binomial_coeff(p::Float64,n::Int64,k::Int64)
+    function binomial_coeff(in_p::Float64,n::Int64,k::Int64)
 
-        coeff=(1-p)^(n-k)
+        coeff=(1-in_p)^(n-k)
         for i in 1:k
-            coeff*=(n+1-i)/i*p
+            coeff*=(n+1-i)/(k+1-i)*in_p
         end
 
          coeff
@@ -15,13 +15,13 @@ function estimate_background(h::Int64,trial_n::Int64,stim_n::Int64)
     end
 
 
-    p=(trial_n-1)/(stim_n*trial_n-1)
+    in_p=(trial_n-1)/(stim_n*trial_n-1)
 
     information=0.0
 
     for r in 0:h-1
 
-        prob=binomial_coeff(p,h-1,r)
+        prob=binomial_coeff(in_p,h-1,r)
 
         information+=prob*log2(stim_n*(r+1)/h)
 
@@ -61,9 +61,27 @@ function numerical_ground_truth(events::Vector{Vector{Int64}},p::Float64,test_n:
 
     mutual_info=0.0::Float64
 
+    total_prob=0.0
+    total_marginal1=0.0
+    total_marginal2=0.0
+
+    for key in keys(marginal1)
+        total_marginal1+=marginal1[key]
+    end
+
+
+    for key in keys(marginal2)
+        total_marginal2+=marginal2[key]
+    end
+    
+
     for key in keys(probs)
+        total_prob+=probs[key]
         mutual_info+=probs[key]*log2( probs[key] / ( marginal1[key[1]]*marginal2[key[2]] ) )
     end
+    
+    println(total_prob," ",total_marginal1," ",total_marginal2)
+
 
     mutual_info
 
@@ -73,9 +91,6 @@ end
 function numerical_ground_truth_bgd(events::Vector{Vector{Int64}},p::Float64,test_n::Int64)
     
     event_pairs=Vector{Tuple{Vector{Int64},Vector{Int64}}}()
-
-    events_scrambled=shuffle(events)
-
 
     for trial_c in 1:test_n
         events_scrambled=shuffle(events)
@@ -92,6 +107,7 @@ function numerical_ground_truth_bgd(events::Vector{Vector{Int64}},p::Float64,tes
         probs[pair]=get(probs,pair,0.0)+1.0/sample_n
     end
  
+    
 
     marginal1=Dict{Vector{Int64},Float64}()
     marginal2=Dict{Vector{Int64},Float64}()
@@ -104,9 +120,27 @@ function numerical_ground_truth_bgd(events::Vector{Vector{Int64}},p::Float64,tes
 
     mutual_info=0.0::Float64
 
+    total_prob=0.0
+    total_marginal1=0.0
+    total_marginal2=0.0
+
+    for key in keys(marginal1)
+        total_marginal1+=marginal1[key]
+    end
+
+
+    for key in keys(marginal2)
+        total_marginal2+=marginal2[key]
+    end
+    
+
     for key in keys(probs)
+        total_prob+=probs[key]
+
         mutual_info+=probs[key]*log2( probs[key] / ( marginal1[key[1]]*marginal2[key[2]] ) )
     end
+    
+    println(total_prob," ",total_marginal1," ",total_marginal2)
 
     mutual_info
 

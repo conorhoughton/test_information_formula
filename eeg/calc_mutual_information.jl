@@ -50,7 +50,7 @@ function make_events(stim_n::Int64)
 
 end
 
-function make_erps(events::Vector{Vector{Int64}},event_sigma::Float64,sigma::Float64,lambd::Float64)
+function make_erps(events::Vector{Vector{Int64}},event_sigma::Float64,sigma::Float64,lambd::Float64,trial_n::Int64)
 
     erps=Erp[]
     for stim_c in 1:length(events)
@@ -83,7 +83,7 @@ function make_distances(erps::Vector{Erp})
 end
 
 
-trial_n=20
+#trial_n=200
 stim_n =10
 
 t_length=0.5
@@ -91,45 +91,65 @@ timestep=0.001
 sigma=1.0
 lambd=10.0
 
+event_sigma=1.0
 
+srand(0)
 events=make_events(stim_n)
 
-for event_sigma in 0.1:0.25:6.0
+#for event_sigma in 0.0:0.2:5.0
 
-    erps=make_erps(events,event_sigma,sigma,lambd)
+sample_n=10
+
+for trial_n in vcat([2,5],collect(10:5:100),collect(120:20:200))
+    av_max=0.0
+    av_max_h=0
+
+    for _ in 1:sample_n
         
-    distances=make_distances(erps)
+        erps=make_erps(events,event_sigma,sigma,lambd,trial_n)
+        
+        distances=make_distances(erps)
 
-    sorted_distances=[Distance[] for _ in 1:length(erps)]
-
-    for i in 1:length(erps)
-        sorted_distances[i]=sort(vcat(distances[i][1:i-1],distances[i][i+1:end]),by = x -> x.d)
-    end
-
-    max=0.0
-
-    for h in 1:2*trial_n
-        information=0.0
+        sorted_distances=[Distance[] for _ in 1:length(erps)]
+        
         for i in 1:length(erps)
-            b=1
-            for j in 1:h-1
-                if sorted_distances[i][j].stim==erps[i].stim
-                    b+=1
+            sorted_distances[i]=sort(vcat(distances[i][1:i-1],distances[i][i+1:end]),by = x -> x.d)
+        end
+        
+        max=0.0
+        max_h=0
+        
+        for h in 1:2*trial_n
+            information=0.0
+            for i in 1:length(erps)
+                b=1
+                for j in 1:h-1
+                    if sorted_distances[i][j].stim==erps[i].stim
+                        b+=1
+                    end
                 end
+                
+                information+=log2(stim_n*b/h)
+                
             end
             
-            information+=log2(stim_n*b/h)
+            this_info=information/length(erps)-estimate_background(h,trial_n,stim_n)
+            
+            if this_info>max
+                max=this_info
+                max_h=h
+            end
             
         end
         
-        this_info=information/length(erps)-estimate_background(h,trial_n,stim_n)
-        
-        if this_info>max
-            max=this_info
-        end
-        
+        av_max+=max
+        av_max_h+=max_h
+       
     end
 
-    println(event_sigma," ",max)
+    av_max/=sample_n
+    av_max_h/=sample_n
+
+    println(trial_n," "," ",av_max_h," ",av_max)
 
 end
