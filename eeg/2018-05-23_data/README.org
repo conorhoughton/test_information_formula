@@ -1,0 +1,31 @@
+
+* info_v_event_sigma_trial_n* runs:
+
+trial_n=*
+stim_n =10
+
+t_length=0.5
+timestep=0.001
+sigma=1.0
+lambd=10.0
+
+
+* example_erps_event_sigma*.dat
+
+from example_erps.jl
+
+* info_v_trial_n.dat
+
+sampled 10 times
+
+trial_n= varies
+stim_n =10
+
+t_length=0.5
+timestep=0.001
+sigma=1.0
+lambd=10.0
+
+event_sigma=1.0
+
+trial_n max_h max_info
