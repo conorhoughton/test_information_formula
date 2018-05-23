@@ -14,6 +14,25 @@ function make_event_vector()
 end
 
 
+
+function make_erp_vector_normal(event::Vector{Int64},sigma::Float64)
+
+    function get_rand()
+        sigma*randn()
+    end
+
+    erp=Float64[]
+
+    for i in 1:5
+        push!(erp,event[i]+get_rand())    
+    end
+
+    erp
+
+end
+
+
+
 function make_erp_vector(event::Vector{Int64},p::Float64)
 
     function get_rand()
@@ -66,7 +85,7 @@ function make_event_vectors(p::Float64)
 end
 
          
-function name_to_event(event::Vector{Int64})
+function name_to_event(event)
     
     event_template=Float64[2.0,-3.0,3.0,2.0,5.0]
 
