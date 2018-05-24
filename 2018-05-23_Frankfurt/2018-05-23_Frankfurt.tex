@@ -65,6 +65,17 @@ $$
 \end{frame}
 
 
+\begin{frame}{Mutual Information 1}
+\color{dark}
+$$
+I(X,Y)=H(X)-H(X|Y)=H(Y)-H(Y|X)
+$$
+\color{black}
+\begin{center}
+info in $X$=(info remaining in X if you know Y)+(mutual info)
+\end{center}
+\end{frame}
+
 \begin{frame}{Mutual Information 2}
 \color{dark}
 $$
@@ -92,8 +103,6 @@ $$
 \color{black}
 \end{frame}
 
-
-
 \begin{frame}{A dart board 2}
 \color{reddish}
 \begin{center}
@@ -113,7 +122,7 @@ $$\mbox{prob}(\mbox{dart lands in }B)=\int_B p(\mathbf{x})dV$$
 \end{frame}
 
 
-\begin{frame}{Estimating the number of number of holes}
+\begin{frame}{Estimating using the number of number of holes 1}
 \color{reddish}
 \begin{center}
 \includegraphics[width=4cm]{dart_board_region.png}
@@ -122,6 +131,10 @@ $$\mbox{prob}(\mbox{dart lands in }B)=\int_B p(\mathbf{x})dV$$
 $$\langle \mbox{number of holes in }B\rangle = \int_B p(\mathbf{x})dV \times (\mbox{total number of holes})$$
 \end{frame}
 
+\begin{frame}{Estimating using the number of number of holes 2}
+\color{dark}
+$$\mbox{vol}\,B\approx \frac{\mbox{number of holes in }B}{\mbox{total number of holes}}$$
+\end{frame}
 
 \begin{frame}{Estimating the probability mass function}
 \color{black}
@@ -135,6 +148,23 @@ $$\mbox{number of holes in }B \approx p(\mathbf{x}_0) \times \mbox{vol}\,B \time
 \color{black}
 Using this to find the mutual information gives a \textsl{Kozachenko-Leonenko} estimator.
 \end{frame}
+
+
+\begin{frame}{Estimating using the number of number of holes 3}
+\color{dark}
+$$p(x_0)\approx%\frac{\#B}{n\times \mbox{vol}\,B}
+$$
+\color{black}
+where $n$ is the total number of points and $\#B$ is the number of points in $B$.
+\color{reddish}
+\begin{center}
+\includegraphics[width=4cm]{dart_board_zoom_ball.png}
+\end{center}
+\color{black}
+so 
+$$p(\circ)=\frac{4}{b\mbox{vol}\,B}$$
+\end{frame}
+
 
 
 \begin{frame}{Kozachenko-Leonenko estimators are very good}
@@ -158,7 +188,7 @@ How do we work out the volume in the space of functions? We have no coordinates 
 $$\mbox{vol}\,B=\int_B dxdydz$$
 \end{frame}
 
-\begin{frame}{A dart board 3}
+\begin{frame}{Use the mass function as a measure!}
 \color{reddish}
 \begin{center}
 \includegraphics[width=4cm]{dart_board_big_20.png}
@@ -169,12 +199,67 @@ $$\mbox{vol}\,B=\int_B p(\mathbf{x}) dV$$
 \end{frame}
 
 
-\begin{frame}{Volume by counting holes}
+\begin{frame}{Volume by counting holes 1}
 \color{dark}
 $$\mbox{vol}\,B\approx \frac{\mbox{number of holes in }B}{\mbox{total number of holes}}$$
 \end{frame}
 
+\begin{frame}{Volume by counting holes 2}
+\color{reddish}
+\begin{center}
+\includegraphics[width=4cm]{dart_board_zoom_ball.png}
+\end{center}
+\color{black}
+A ball with volume $h/n$ around the circled point, where $n$ is the total number of holes and $h=4$.
+\end{frame}
 
+
+\begin{frame}{Metric}
+To make a ball you need a metric; not to measure the radius since the
+size is being defined by the volume, but to define \lq{}the nearest
+$h$ points\rq{}.
+\color{reddish}
+\begin{center}
+\color{reddish}
+\include{two_erps}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{Oh no}
+$$p(\mathbf{x}_0)\approx\frac{\#B}{n\times \mbox{vol}\,B}=\frac{h}{nh/n}=1$$
+and using this meaure gives $H(X)=0$; in fact the
+  differential entropy is not well-defined. However the
+  mutual information is!
+\end{frame}
+
+
+\begin{frame}{Mutual infomation}
+$$I(X,Y)=H(Y)-H(Y|X)$$ has two probability distributions: $p_Y(y)$ and
+  $p_{Y|X}(y|x)$! IDEA: use one to estimate volume, the other can then
+  be estimated by counting!
+\end{frame}
+
+\begin{frame}{Formula}
+This is for the case where $X$ is a discrete random variable and
+everything exciting is happening in $Y$ space.
+$$I(X,Y)=\frac{1}{n}\sum_{y_i}\log_2{\frac{n\#_{y_i}B}{h}}$$
+where $\#_{x}B$ are the number of points in $B$ that correspond to the $X$ value.
+\end{frame}
+
+
+\begin{frame}{h}
+
+There are two approximations:
+$$\int_B p(x)dV = \# B\times \mbox{vol}\,B$$
+and
+$$\int_B p(x)dV = \mbox{V}\times p(x_0)$$ 
+
+The first approximation gets better if the volume is bigger, the
+second gets worse; the correct choice of $h$ is a compromize between
+these two. There is actually a clever approach to picking $h$ that
+seems to work, based on the bias.
+\end{frame}
 
 
 \begin{frame}{Pretend ERPs 1}
@@ -219,21 +304,6 @@ amount the landmark points are moved is determined by $\sigma$; for
 \end{center}
 \end{frame}
 
-
-%% \begin{frame}{Neurons}
-%% \color{reddish}
-%% \begin{center}
-%% \includegraphics[width=6cm]{Kat_600.png}
-%% \end{center}
-%% \color{black}
-%% \begin{center}
-%% A Biocytin labelled CA1 pyramidal cell from a P14 rat hippocampus.
-%% \end{center}
-%% \vfill
-%% \color{gray}
-%% \flushright{\small{By Katarina Kolaric\\\texttt{http://www.bristol.ac.uk/neural-dynamics/programme-details/gallery}}}
-%% \color{black}
-%%\end{frame}
 
 \end{document}
 
