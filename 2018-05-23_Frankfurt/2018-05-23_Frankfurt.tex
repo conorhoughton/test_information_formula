@@ -1,0 +1,90 @@
+\documentclass{beamer}
+\usepackage[latin1]{inputenc}
+%\usetheme{Montpellier}
+\usetheme{Boadilla}
+%\usecolortheme[RGB={204,51,255}]{structure}
+%\usecolortheme[named=purple]{structure}
+\usecolortheme[RGB={62,128,62}]{structure}
+%\definecolor{dark}{rgb}{0.3,0.15,0.3}
+%\definecolor{light}{rgb}{0.8,0.6,0.8}
+%\definecolor{reddish}{rgb}{.5,0.15,0.15}
+\definecolor{dark}{rgb}{0.4,0.2,0.4}
+%\definecolor{light}{rgb}{0.8,0.6,0.8}
+\definecolor{reddish}{rgb}{.7,0.25,0.25}
+\usepackage{graphicx}
+\usepackage{pstricks}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows,decorations.markings,positioning}
+\usepackage{epstopdf}
+
+\title[Mutual information for functions.]{Mutual information for functions, maybe even ERPs.}
+\author{Conor Houghton}
+\institute{CS, U Bristol}
+\date{Frankfurt, May 2018}
+
+\begin{document}
+
+\maketitle
+
+
+\begin{frame}{Pretend ERPs 1}
+\color{reddish}
+\begin{center}
+\include{example_erp_events}
+\end{center}
+\color{black} \textbf{Fictive event related potentials.} The
+\lq{}stimuli\rq{} are random 5-vectors of landmarks; an ERP is
+produces by perturbing the landmarks, interpolating with splines and
+adding noise. \textbf{B} shows responses to different stimuli.
+\color{black}
+\end{frame}
+
+
+\begin{frame}{Pretend ERPs 2}
+\color{reddish}
+\begin{center}
+\include{example_erps_event_sigma0}
+\end{center}
+\color{black} \textbf{Multiple trials to the same stimulus.} The
+amount the landmark points are moved is determined by $\sigma$; for
+\textbf{A} $\sigma=0.0$, for \textbf{B} $\sigma=2$.  \color{black}
+\end{frame}
+
+
+
+\begin{frame}{Results 1}
+\color{reddish}
+\begin{center}
+\include{info_v_event_sigma_plot}
+\color{black} \textbf{Estimated mutual information.} \color{black}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{Results 2}
+\color{reddish}
+\begin{center}
+  \include{info_v_trial_n}
+\color{black} \textbf{Estimated mutual information.} Here $\sigma=1$. \color{black}
+\end{center}
+\end{frame}
+
+
+%% \begin{frame}{Neurons}
+%% \color{reddish}
+%% \begin{center}
+%% \includegraphics[width=6cm]{Kat_600.png}
+%% \end{center}
+%% \color{black}
+%% \begin{center}
+%% A Biocytin labelled CA1 pyramidal cell from a P14 rat hippocampus.
+%% \end{center}
+%% \vfill
+%% \color{gray}
+%% \flushright{\small{By Katarina Kolaric\\\texttt{http://www.bristol.ac.uk/neural-dynamics/programme-details/gallery}}}
+%% \color{black}
+%%\end{frame}
+
+\end{document}
+
