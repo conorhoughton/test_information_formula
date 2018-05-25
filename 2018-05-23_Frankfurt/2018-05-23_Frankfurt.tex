@@ -8,7 +8,7 @@
 %\definecolor{dark}{rgb}{0.3,0.15,0.3}
 %\definecolor{light}{rgb}{0.8,0.6,0.8}
 %\definecolor{reddish}{rgb}{.5,0.15,0.15}
-\definecolor{dark}{rgb}{0.4,0.2,0.4}
+\definecolor{dark}{rgb}{0.5,0.3,0.4}
 %\definecolor{light}{rgb}{0.8,0.6,0.8}
 \definecolor{reddish}{rgb}{.7,0.25,0.25}
 \usepackage{graphicx}
@@ -18,7 +18,7 @@
 \usetikzlibrary{arrows,decorations.markings,positioning}
 \usepackage{epstopdf}
 
-\title[Mutual information for functions.]{Mutual information for functions, maybe even ERPs.}
+\title[A Kozachenko-Leonenko estimator.]{Mutual information for functions, maybe even ERPs.}
 \author{Conor Houghton}
 \institute{CS, U Bristol}
 \date{Frankfurt, May 2018}
@@ -59,30 +59,44 @@ $$
 \begin{frame}{Mutual Information 1}
 \color{dark}
 $$
-I(X,Y)=H(X)-H(X|Y)=H(Y)-H(Y|X)
-$$
-\color{black}
-\end{frame}
-
-
-\begin{frame}{Mutual Information 1}
-\color{dark}
-$$
-I(X,Y)=H(X)-H(X|Y)=H(Y)-H(Y|X)
-$$
-\color{black}
-\begin{center}
-info in $X$=(info remaining in X if you know Y)+(mutual info)
-\end{center}
-\end{frame}
-
-\begin{frame}{Mutual Information 2}
-\color{dark}
-$$
 I(X,Y)=\sum_{x,y} p_{X,Y}(x,y) \log_2{\frac{p_{X,Y}(x,y)}{p_X(x)p_Y(y)}}
 $$
 \color{black}
 \end{frame}
+
+
+\begin{frame}{Mutual Information 2}
+\color{dark}
+$$
+I(X,Y)=H(X)-H(X|Y)=H(Y)-H(Y|X)
+$$
+\color{black}
+\end{frame}
+
+
+\begin{frame}{Mutual Information 3}
+\color{dark}
+$$
+I(X,Y)=H(X)-H(X|Y)=H(Y)-H(Y|X)
+$$
+or, for example
+$$
+H(Y)=H(Y|X)+I(X,Y)
+$$
+\color{black}
+\begin{center}
+info in $Y$=(info remaining in Y if you know X)+(mutual info)
+\end{center}
+\end{frame}
+
+
+\begin{frame}{Spike trains}
+\color{reddish}
+\begin{center}
+\includegraphics[width=8cm]{SpikeTrains.png}
+\end{center}
+\end{frame}
+
 
 \begin{frame}{Functions}
 \color{reddish}
@@ -127,13 +141,10 @@ $$\mbox{prob}(\mbox{dart lands in }B)=\int_B p(\mathbf{x})dV$$
 \begin{center}
 \includegraphics[width=4cm]{dart_board_region.png}
 \end{center}
-\color{black}
-$$\langle \mbox{number of holes in }B\rangle = \int_B p(\mathbf{x})dV \times (\mbox{total number of holes})$$
-\end{frame}
-
-\begin{frame}{Estimating using the number of number of holes 2}
 \color{dark}
-$$\mbox{vol}\,B\approx \frac{\mbox{number of holes in }B}{\mbox{total number of holes}}$$
+$$\langle \mbox{number of holes in }B\rangle = \int_B p(\mathbf{x})dV \times (\mbox{total number of holes})$$
+\color{black}
+where the total volume is normalized.
 \end{frame}
 
 \begin{frame}{Estimating the probability mass function}
@@ -152,7 +163,7 @@ Using this to find the mutual information gives a \textsl{Kozachenko-Leonenko} e
 
 \begin{frame}{Estimating using the number of number of holes 3}
 \color{dark}
-$$p(x_0)\approx%\frac{\#B}{n\times \mbox{vol}\,B}
+$$p(x_0)\approx\frac{\#B}{n\times \mbox{vol}\,B}
 $$
 \color{black}
 where $n$ is the total number of points and $\#B$ is the number of points in $B$.
@@ -162,7 +173,7 @@ where $n$ is the total number of points and $\#B$ is the number of points in $B$
 \end{center}
 \color{black}
 so 
-$$p(\circ)=\frac{4}{b\mbox{vol}\,B}$$
+$$p(\circ)=\frac{4}{n\mbox{vol}\,B}$$
 \end{frame}
 
 
@@ -235,25 +246,39 @@ and using this meaure gives $H(X)=0$; in fact the
 
 
 \begin{frame}{Mutual infomation}
-$$I(X,Y)=H(Y)-H(Y|X)$$ has two probability distributions: $p_Y(y)$ and
-  $p_{Y|X}(y|x)$! IDEA: use one to estimate volume, the other can then
+\color{dark}
+$$I(X,Y)=H(Y)-H(Y|X)$$ 
+\color{black}
+has two probability distributions: $p_Y(y)$ and
+  $p_{Y|X}(y|x)$!
+\vskip 1cm
+IDEA: use one to estimate volume, the other can then
   be estimated by counting!
 \end{frame}
 
-\begin{frame}{Formula}
+\begin{frame}{Formula 1}
 This is for the case where $X$ is a discrete random variable and
 everything exciting is happening in $Y$ space.
-$$I(X,Y)=\frac{1}{n}\sum_{y_i}\log_2{\frac{n\#_{y_i}B}{h}}$$
-where $\#_{x}B$ are the number of points in $B$ that correspond to the $X$ value.
+$$I(X,Y)=\frac{1}{n}\sum_{y_i}\log_2{\frac{n\#_{y_i}B}{h}}$$ where
+$\#_{y}B$ are the number of points in $B$ that correspond to the $X$
+value as $y$ and $n_s$ is the number of stimuli.
+\end{frame}
+
+
+\begin{frame}{Formula 2}
+$$I(X,Y)=\frac{1}{n}\sum_{y_i}\log_2{\frac{n_s\#_{y_i}B}{h}}$$
+\begin{center}
+\includegraphics[width=6cm]{dots.png}
+\end{center}
 \end{frame}
 
 
 \begin{frame}{h}
 
 There are two approximations:
-$$\int_B p(x)dV = \# B\times \mbox{vol}\,B$$
+$$\int_B p(x)dV \approx \# B\times \mbox{vol}\,B$$
 and
-$$\int_B p(x)dV = \mbox{V}\times p(x_0)$$ 
+$$\int_B p(x)dV \approx \mbox{V}\times p(x_0)$$ 
 
 The first approximation gets better if the volume is bigger, the
 second gets worse; the correct choice of $h$ is a compromize between
@@ -303,6 +328,15 @@ amount the landmark points are moved is determined by $\sigma$; for
 \color{black} \textbf{Estimated mutual information.} Here $\sigma=1$. \color{black}
 \end{center}
 \end{frame}
+
+
+\begin{frame}{The End}
+\color{black}
+\begin{center}
+THANK YOU!
+\end{center}
+\end{frame}
+
 
 
 \end{document}
