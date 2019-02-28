@@ -106,8 +106,17 @@ If $X$ is the stimulus $H(X|S)$ quantifies noise.
 \color{black}
 but if we count the grapes and bananas individually
 \color{dark}
-  $$H(X)=\frac{20}{25}\log{\frac{25}{20}}+\frac{2}{25}\log\frac{25}{2}+\frac{3}{25}\log{25}=1.11$$
+  $$H(X)=\log{25}=2.6$$
 \color{black}
+\end{frame}
+
+\begin{frame}{Differential entropy is tricky}
+\vskip 3cm
+  In fact the differential entropy
+\color{dark}
+$$H(X)=-\int p(x)\log{p(x)}dV$$
+\color{black}
+is \textbf{not} the limit of the discrete entropy and is \textbf{not} invariant under changes of variable.
 \btVFill
 \color{gray}
 \begin{flushright}
@@ -381,7 +390,7 @@ Using this to find the mutual information gives a \textsl{Kozachenko-Leonenko} e
 
 \begin{frame}{Problem}
 \color{black}
-How do we work out the volume in the space of functions? We have no coordinates $xyz$ to do
+How do we work out the volume in the space of spike trains? We have no coordinates $xyz$ to do
 \color{dark}
 $$\mbox{vol}\,B=\int_B dxdydz$$
 \end{frame}
@@ -389,7 +398,7 @@ $$\mbox{vol}\,B=\int_B dxdydz$$
 
 \begin{frame}{Problem}
 \color{black}
-How do we work out the volume in the space of functions? We have no coordinates $xyz$ to do
+How do we work out the volume in the space of spike trains? We have no coordinates $xyz$ to do
 \color{dark}
 $$\mbox{vol}\,B=\int_B dxdydz$$
 \color{black}
@@ -474,7 +483,7 @@ IDEA: use one to estimate volume, the other can then
 This is for the case where $X$ is a discrete random variable and
 everything exciting is happening in $Y$ space.
 \color{dark}
-$$I(X,Y)=\frac{1}{n}\sum_{y_i}\log_2{\frac{n_s\#B_{y_i}(y_i)}{h}}$$
+$$I(X,Y)=\frac{1}{n}\sum_{y_i}\log_2{\frac{n_s\#_{y_i}B(y_i)}{h}}$$
 \color{black} where $B(y_i)$ is the ball around $y$ and $\#_y{B(y)}$
   is the number of points in that correspond to the same $X$ value as
   $y$. $n_s$ is the number of stimuli.
