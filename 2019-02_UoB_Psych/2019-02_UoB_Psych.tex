@@ -8,7 +8,7 @@
 %\definecolor{dark}{rgb}{0.4,0.20,0.4}
 %\definecolor{light}{rgb}{0.8,0.6,0.8}
 %\definecolor{reddish}{rgb}{.5,0.15,0.15}
-\definecolor{dark}{rgb}{0.6,0.4,0.5}
+\definecolor{dark}{rgb}{0.55,0.35,0.45}
 %\definecolor{light}{rgb}{0.8,0.6,0.8}
 \definecolor{reddish}{rgb}{.7,0.25,0.25}
 \usepackage{graphicx}
@@ -32,7 +32,7 @@
 This talk will be about estimating mutual information on metic spaces.
 \begin{itemize}
 \item I became interested in this topic because of the application to spike trains.
-\item I believe that the approach has applications elsewhere, perhaps in machine learning.
+\item I believe that the approach outlined here has applications elsewhere, perhaps in machine learning.
 \end{itemize}
 \color{black}
 \end{frame}
@@ -46,8 +46,7 @@ This talk will be about estimating mutual information on metic spaces.
 \end{frame}
 
 
-
-\begin{frame}{Shannon's Entropy 1}
+\begin{frame}{Shannon's entropy 1}
 \color{dark}
 $$
 H(X)=-\sum_x p(x)\log_2{p(x)}
@@ -57,7 +56,7 @@ $$
 
 
 
-\begin{frame}{Shannon's Entropy 2}
+\begin{frame}{Shannon's entropy 2}
 \color{dark}
 $$
 H(X)=-\sum_x p(x)\log_2{p(x)}
@@ -78,8 +77,45 @@ $$
 \color{black}
 \end{frame}
 
+\begin{frame}{Shannon's entropy 3}
+  Shannon's entropy measure's \lq{}interestingness\rq{} rather than information.
+\end{frame}
 
-\begin{frame}{Mutual Information 1}
+\begin{frame}{Conditional entropy}
+\color{dark}
+  $$
+H(X|S=s)=-\sum_x p(x|s)\log_2{p(x|s)}
+$$
+\color{black}
+and
+\color{dark}
+$$
+H(X|S)=H(X|S)=\langle H(X|s)\rangle_s
+$$
+\color{black}
+If $X$ is the stimulus $H(X|S)$ quantifies noise.
+\end{frame}
+
+\begin{frame}{Differential entropy is tricky}
+  \begin{center}
+    \includegraphics[width=3cm]{lanco_fruits_1.png}
+  \end{center}
+  If $\mathcal{X}=\{\mbox{orange},\mbox{apple},\mbox{bunch of graphs},\mbox{pear},\mbox{some bananas}\}$ then
+\color{dark}
+  $$H(X)=\log{5}=1.6$$
+\color{black}
+but if we count the grapes and bananas individually
+\color{dark}
+  $$H(X)=\frac{20}{25}\log{\frac{25}{20}}+\frac{2}{25}\log\frac{25}{2}+\frac{3}{25}\log{25}=1.11$$
+\color{black}
+\btVFill
+\color{gray}
+\begin{flushright}
+\tiny{Picture from, you know, the internet.}
+\end{flushright}
+\end{frame}
+
+\begin{frame}{Mutual information 1}
 \color{dark}
 $$
 I(X,Y)=\sum_{x,y} p_{X,Y}(x,y) \log_2{\frac{p_{X,Y}(x,y)}{p_X(x)p_Y(y)}}
@@ -88,7 +124,7 @@ $$
 \end{frame}
 
 
-\begin{frame}{Mutual Information 2}
+\begin{frame}{Mutual information 2}
 \color{dark}
 $$
 I(X,Y)=\sum_{x,y} p_{X,Y}(x,y) \log_2{\frac{p_{X,Y}(x,y)}{p_X(x)p_Y(y)}}
@@ -100,11 +136,10 @@ $$
 I(X,Y)=H(X)-H(X|Y)=H(Y)-H(Y|X)
 $$
 \color{black}
-where $H(Y|X)=\langle H(Y|x)\rangle_x$.
 \end{frame}
 
 
-\begin{frame}{Mutual Information 3}
+\begin{frame}{Mutual information 3}
 \color{dark}
 $$
 I(X,Y)=H(X)-H(X|Y)=H(Y)-H(Y|X)
@@ -236,7 +271,9 @@ $$I(W;S)=H(W)-H(W|S)$$
 
 
 \begin{frame}{A Kozachenko-Leonenko estimator.}
+\vskip 3cm
   Here we will use a Kozachenko-Leonenko estimator.
+
   \btVFill
   \begin{flushright}
     \color{gray}
@@ -281,13 +318,13 @@ $$\mbox{prob}(\mbox{dart lands in }B)=\int_B p(\mathbf{x})dV$$
 \end{frame}
 
 
-\begin{frame}{Estimating using the number of number of holes 1}
+\begin{frame}{Estimating using the number of holes 1}
 \color{reddish}
 \begin{center}
 \includegraphics[width=4cm]{dart_board_region.png}
 \end{center}
 \color{dark}
-$$\langle \mbox{number of holes in }B\rangle = \int_B p(\mathbf{x})dV \times (\mbox{total number of holes})$$
+$$\langle \mbox{number of holes in }B\rangle \approx \int_B p(\mathbf{x})dV \times (\mbox{total number of holes})$$
 \color{black}
 where the total volume is normalized.
 \end{frame}
@@ -305,7 +342,7 @@ $$\mbox{number of holes in }B \approx p(\mathbf{x}_0) \times \mbox{vol}\,B \time
 \end{frame}
 
 
-\begin{frame}{Estimating using the number of number of holes 3}
+\begin{frame}{Estimating using the number of holes 3}
 \color{dark}
 $$p(x_0)\approx\frac{\#B}{n\times \mbox{vol}\,B}
 $$
@@ -321,7 +358,7 @@ $$p(\circ)=\frac{4}{n\mbox{vol}\,B}$$
 \end{frame}
 
 
-\begin{frame}{Estimating using the number of number of holes 3}
+\begin{frame}{Estimating using the number of holes 3}
 \color{dark}
 $$p(x_0)\approx\frac{\#B}{n\times \mbox{vol}\,B}$$
 \color{black}
@@ -426,17 +463,16 @@ IDEA: use one to estimate volume, the other can then
 This is for the case where $X$ is a discrete random variable and
 everything exciting is happening in $Y$ space.
 \color{dark}
-$$I(X,Y)=\frac{1}{n}\sum_{y_i}\log_2{\frac{n_s\#B(y_i)}{h}}$$
-\color{black}
-where
-$\#_{y}B$ are the number of points in $B$ that correspond to the $X$
-value as $y$ and $n_s$ is the number of stimuli.
+$$I(X,Y)=\frac{1}{n}\sum_{y_i}\log_2{\frac{n_s\#B_{y_i}(y_i)}{h}}$$
+\color{black} where $B(y_i)$ is the ball around $y$ and $\#_y{B(y)}$
+  is the number of points in that correspond to the same $X$ value as
+  $y$. $n_s$ is the number of stimuli.
 \end{frame}
 
 
 \begin{frame}{Formula 2}
 \color{dark}
-$$I(X,Y)=\frac{1}{n}\sum_{y_i}\log_2{\frac{n_s \#B(y_i)}{h}}$$
+$$I(X,Y)=\frac{1}{n}\sum_{y_i}\log_2{\frac{n_s \#_{y_i}B(y_i)}{h}}$$
 \color{black}
 \begin{center}
 \includegraphics[width=6cm]{dots.png}
@@ -446,19 +482,22 @@ $$I(X,Y)=\frac{1}{n}\sum_{y_i}\log_2{\frac{n_s \#B(y_i)}{h}}$$
 
 \begin{frame}{h}
 
-There are two approximations:
+  There are two approximations:
+  \color{dark}
 $$\int_B p(x)dV \approx \# B\times \mbox{vol}\,B$$
-and
-$$\int_B p(x)dV \approx \mbox{V}\times p(x_0)$$ 
-
+\color{black}
+  and
+\color{dark}
+  $$\int_B p(x)dV \approx \mbox{V}\times p(x_0)$$ 
+\color{black}
 The first approximation gets better if the volume is bigger, the
 second gets worse; the correct choice of $h$ is a compromize between
-these two. There is actually a clever approach to picking $h$ that
+these two. There is actually an approach to picking $h$ that
 seems to work, based on the bias.
 \end{frame}
 
 
-\begin{frame}{Another Formula}
+\begin{frame}{Another formula}
 \color{dark}
 $$I(X,Y)=\frac{1}{n}\sum_{i=1}^n\log_2{\frac{n\#[C(u_i,v_i)]}{h^2}}$$
 \color{black}
