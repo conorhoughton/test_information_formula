@@ -37,6 +37,29 @@ This talk will be about estimating mutual information on metric spaces.
 \color{black}
 \end{frame}
 
+\begin{frame}{Neurons}
+\color{reddish}
+\begin{center}
+\includegraphics[width=8cm]{PC.png}
+\end{center}
+\btVFill
+\begin{flushright}
+\tiny{Picture from wikisource.}
+\end{flushright}
+\end{frame}
+
+\begin{frame}{Spikes}
+\color{reddish}
+\begin{center}
+\includegraphics[width=8cm]{spike.png}
+\end{center}
+\btVFill
+\begin{flushright}
+\tiny{Picture from Hodgkin and Huxley, 1939.}
+\end{flushright}
+\end{frame}
+
+
 
 \begin{frame}{Spike trains}
 \color{reddish}
@@ -77,10 +100,6 @@ $$
 \color{black}
 \end{frame}
 
-\begin{frame}{Shannon's entropy}
-  Shannon's entropy measure's \lq{}interestingness\rq{} rather than information.
-\end{frame}
-
 \begin{frame}{Conditional entropy}
 \color{dark}
   $$
@@ -96,15 +115,36 @@ $$
 If $X$ is the stimulus $H(X|S)$ quantifies noise.
 \end{frame}
 
+
+\begin{frame}{Differential entropy}
+  \color{dark}
+$$
+H(X)=-\int dx p_X(x)\log_2 {p_X(x)}
+$$
+\end{frame}
+
+
+
 \begin{frame}{Differential entropy is tricky}
   \color{dark}
 $$
-H(X)=-\int dx p(x)\log_2 {p(x)} \approx -\sum_i \delta x p(x_i) \log_2{p(x_i)}
+H(X)=-\int dx p_X(x)\log_2 {p_X(x)}
 $$
-\color{black}so if $p_i$\color{black}{} is the probability for the $i$\color{black}th bin then
+\color{black}
+If $y=\lambda x$ we have
+\color{dark}
+$$p_X(x)dx=p_Y(y)dy$$
+\color{black}
+but
 \color{dark}
 $$
-H(X)\approx - \sum_i p_i \log{p_i} +\log{\delta x}
+p_Y(y)=p_X(x)/\lambda
+$$
+\color{black}
+so
+\color{dark}
+$$
+H(Y)= H(X)+\log_2{\lambda}
 $$
 
 \end{frame}
@@ -148,6 +188,15 @@ $$
 \color{black}
 \begin{center}
 info in $Y$=(info remaining in Y if you know X)+(mutual info)
+\end{center}
+\end{frame}
+
+
+
+\begin{frame}{Spike trains again}
+\color{reddish}
+\begin{center}
+\includegraphics[width=8cm]{SpikeTrains.png}
 \end{center}
 \end{frame}
 
@@ -264,7 +313,25 @@ $$I(W;S)=H(W)-H(W|S)$$
 \end{frame}
 
 
-\begin{frame}{A Kozachenko-Leonenko estimator.}
+\begin{frame}{Approach 1: spike trains live in a metric space.}
+\vskip 1cm  
+Spike trains can be thought of as living in a metric space.
+\vskip 1cm
+\color{reddish}
+\begin{center}
+\includegraphics[width=5cm]{SpikeTrains.png}
+\end{center}
+
+  \btVFill
+  \begin{flushright}
+    \color{gray}
+    \tiny{Jonathan Victor}
+    \color{black}
+\end{flushright}
+\end{frame}
+
+
+\begin{frame}{Approach 2: Kozachenko-Leonenko estimator.}
 \vskip 3cm
   Here we will use a Kozachenko-Leonenko estimator.
 
@@ -346,8 +413,9 @@ where $n$ is the total number of points and $\#B$ is the number of points in $B$
 \begin{center}
 \includegraphics[width=4cm]{dart_board_zoom_ball.png}
 \end{center}
+\color{black}
+so in this case
 \color{dark}
-so 
 $$p(\circ)=\frac{4}{n\mbox{vol}\,B}$$
 \end{frame}
 
@@ -463,6 +531,41 @@ has two probability distributions: $p_Y(y)$ and
 IDEA: use one to estimate volume, the other can then
   be estimated by counting!
 \end{frame}
+
+
+\begin{frame}{Idea}
+  \vskip 1cm
+Consider the case where $Y$ takes values on a metric space (\color{reddish}spike trains!\color{black})and $X$ on a discrete space (\color{reddish}which song?\color{black}).
+\color{black}
+\begin{center}
+\includegraphics[width=6cm]{dots_simple.png}
+\end{center}
+\end{frame}
+
+
+
+\begin{frame}{Idea}
+  \vskip 1cm
+Consider the case where $Y$ takes values on a metric space and $X$ on a discrete space.
+  \vskip 1cm
+  Use $p_Y(y)$ to estimate volume, a ball of radius $h$ has $h$ points in it, corresponding to any $X$ value.
+\begin{center}
+\includegraphics[width=6cm]{dots_black.png}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{Idea}
+  \vskip 1cm
+Consider the case where $Y$ takes values on a metric space and $X$ on a discrete space.
+  \vskip 1cm
+  Estimate $p_{Y|X}(y|x)$ by counting points: $p_{Y|X}(y|x)$ is estimated by counting the $y$ points in the ball corresponding to $X=x$.  
+\color{black}
+\begin{center}
+\includegraphics[width=6cm]{dots_prob.png}
+\end{center}
+\end{frame}
+
 
 \begin{frame}{Formula}
 This is for the case where $X$ is a discrete random variable and
