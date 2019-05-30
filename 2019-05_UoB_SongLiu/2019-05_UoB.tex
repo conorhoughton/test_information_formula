@@ -60,7 +60,7 @@ This talk will be about estimating mutual information on metric spaces.
 \end{frame}
 
 
-\begin{frame}{Spikes}
+\begin{frame}{Zebra finch}
 \color{reddish}
 \begin{center}
 \includegraphics[width=8cm]{zebra_finch.jpg}
@@ -124,7 +124,8 @@ $$
 H(X|S)=H(X|S)=\langle H(X|s)\rangle_s
 $$
 \color{black}
-If $X$ is the stimulus $H(X|S)$ quantifies noise.
+\vskip 1cm
+If $S$ is the stimulus $H(X|S)$ quantifies noise.
 \end{frame}
 
 
@@ -199,7 +200,7 @@ H(Y)=H(Y|X)+I(X,Y)
 $$
 \color{black}
 \begin{center}
-info in $Y$=(info remaining in Y if you know X)+(mutual info)
+info in $Y$=(info remaining in $Y$ if you know $X$)+(mutual info)
 \end{center}
 \end{frame}
 
@@ -252,7 +253,7 @@ $$H(W)=-\sum_i p(w_i)\log_2 p(w_i) =-\langle\log_2 p(w_i)\rangle$$
 
 \begin{frame}{Classical approach}
 \begin{itemize}
-\item Conditional probability.
+\item Conditional entropy
 \color{reddish}
 \begin{center}
 \include{conditioned}
@@ -267,7 +268,8 @@ $$H(W)=-\sum_i p(w_i)\log_2 p(w_i) =-\langle\log_2 p(w_i)\rangle$$
 
 
 \begin{frame}{Classical approach}
-\begin{itemize}
+\vskip 2cm
+  \begin{itemize}
 \item Mutual information
 \color{dark}
 $$H(W|S)=\langle H(W|s_i)\rangle$$
@@ -408,7 +410,7 @@ If the mass function varies slowly:
 \color{dark}
 $$\int_B p(\mathbf{x})dV\approx p(\mathbf{x}_0) \times \mbox{vol}\,B$$
 \color{black}
-where $\textbf{x}_0$ is a point, for example, in the middle of $B$ where we are interested in. Now
+where $\textbf{x}_0$ is a point, for example, in the middle of $B$ the region we are interested in. Now
 \color{dark}
 $$\mbox{number of holes in }B \approx p(\mathbf{x}_0) \times \mbox{vol}\,B \times (\mbox{total number of holes})$$
 \color{black}
@@ -426,9 +428,11 @@ where $n$ is the total number of points and $\#B$ is the number of points in $B$
 \includegraphics[width=4cm]{dart_board_zoom_ball.png}
 \end{center}
 \color{black}
-so in this case
+In this case $B$ is the ball and
 \color{dark}
-$$p(\circ)=\frac{4}{n\mbox{vol}\,B}$$
+$$p(\circ)=\frac{4}{1053\mbox{vol}\,B}$$
+\color{black}
+since $n=1053$ is the total number of holes in the board.
 \end{frame}
 
 
@@ -440,7 +444,8 @@ Using this to find the mutual information gives a \textsl{Kozachenko-Leonenko} e
 \end{frame}
 
 \begin{frame}{Kozachenko-Leonenko estimators are very good}
-\color{reddish}
+\vskip 2cm
+  \color{reddish}
 \begin{center}
 \includegraphics[width=6cm]{Birthday_Paradox.png}
 \end{center}
@@ -507,7 +512,7 @@ $$\mbox{vol}\,B=\int_B p(\mathbf{x}) dV\approx \frac{\mbox{number of holes in }B
 \includegraphics[width=4cm]{dart_board_zoom_ball.png}
 \end{center}
 \color{black}
-A ball with volume $h/n$ around the circled point, where $n$ is the total number of holes and $h=4$.
+A ball with volume $h/n$ around the circled point, where $n$ is the total number of holes. Here $h=4$ so the volume is $4/1053$.
 \end{frame}
 
 
@@ -547,7 +552,7 @@ IDEA: use one to estimate volume, the other can then
 
 \begin{frame}{Idea}
   \vskip 1cm
-Consider the case where $Y$ takes values on a metric space (\color{reddish}spike trains!\color{black})and $X$ on a discrete space (\color{reddish}which song?\color{black}).
+Consider the case where $Y$ takes values on a metric space (\color{reddish}spike trains!\color{black}) and $X$ on a discrete space (\color{reddish}which song?\color{black}).
 \color{black}
 \begin{center}
 \includegraphics[width=6cm]{dots_simple.png}
