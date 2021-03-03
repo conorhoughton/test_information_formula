@@ -15,7 +15,7 @@ function make_simulated_env(coeffs::Vector{Float64},length::Float64,timestep::Fl
     vector_env=Float64[]
 
     noise_a=noise*(2*rand()-1)
-    freq=30+2.*randn()
+    freq=30+2.0*randn()
 
     while t<length
         push!(vector_env,wave(t)+noise_a*sin(freq*t*2*pi))

@@ -5,7 +5,7 @@ using Dierckx
 
 function make_simulated_erp(events::Vector{Float64})
 
-    unshift!(events,0.0)
+    pushfirst!(events,0.0)
     push!(events,0.0)
     events=-events
 

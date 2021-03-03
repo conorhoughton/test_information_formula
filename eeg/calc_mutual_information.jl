@@ -1,4 +1,6 @@
 
+using LinearAlgebra
+
 include("./make_event_vectors.jl")
 include("./make_simulated_erp.jl")
 include("./estimate_background.jl")
@@ -93,7 +95,7 @@ lambd=10.0
 
 event_sigma=1.0
 
-srand(0)
+#srand(0)
 events=make_events(stim_n)
 
 #for event_sigma in 0.0:0.2:5.0
